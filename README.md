@@ -7,9 +7,8 @@ plain HTML/CSS/JS that any static host can serve.
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | The one-pager: hero → scroll-scrubbed DNA journey → 11 services → platform showcase → contact |
+| `index.html` | The one-pager: hero → scroll-scrubbed DNA journey → 11 services → contact |
 | `login.html` | Client / Agent login chooser (switches theme in place, then hands off to the portals) |
-| `platform.html` | Standalone "inside the platform" tour (not linked from the nav — the one-pager now covers it) |
 
 Portals the login page hands off to:
 - Client → `https://app.redclip.com`

@@ -226,6 +226,7 @@ nav > *{pointer-events:auto;}
 /* hidden UI collage — visible only inside the spotlight around the cursor */
 .reveal-layer{
   position:absolute;inset:0;pointer-events:none;display:none;
+  z-index:0;                       /* must stay behind the text and the tablet */
   background-image:url('assets/reveal.jpg');
   background-size:cover;background-position:center top;
   opacity:.5;
@@ -233,6 +234,10 @@ nav > *{pointer-events:auto;}
     #000 0%, rgba(0,0,0,.85) 45%, transparent 72%);
           mask-image:radial-gradient(circle 230px at var(--mx,-500px) var(--my,-500px),
     #000 0%, rgba(0,0,0,.85) 45%, transparent 72%);
+  /* without these the gradient tiles and stray copies of the spotlight
+     appear away from the cursor */
+  -webkit-mask-repeat:no-repeat;  mask-repeat:no-repeat;
+  -webkit-mask-size:100% 100%;    mask-size:100% 100%;
 }
 @media (hover:hover) and (pointer:fine){
   .reveal-layer{display:block;}
@@ -241,6 +246,7 @@ nav > *{pointer-events:auto;}
   width:100%;max-width:1280px;margin:0 auto;
   padding:calc(var(--nav-h) + clamp(26px,6vh,68px)) clamp(22px,5vw,64px) 0;
   will-change:transform;
+  position:relative;z-index:2;      /* above the reveal layer */
 }
 .intro-title{
   color:var(--ink);font-weight:800;letter-spacing:-.04em;line-height:1.03;
@@ -282,6 +288,7 @@ nav > *{pointer-events:auto;}
   width:min(1180px,94vw);
   margin:clamp(16px,4vh,44px) auto 0;
   will-change:transform;transform-origin:50% 12%;
+  position:relative;z-index:1;      /* the collage must never paint over the tablet */
   /* box-shadow on the container instead of a filter on the PNG:
      filters re-rasterise every frame of the zoom and caused visible jank */
   border-radius:22px;
@@ -542,45 +549,6 @@ nav > *{pointer-events:auto;}
 .lead-form textarea{resize:vertical;min-height:84px;}
 .lead-form button{grid-column:1/-1;justify-content:center;}
 
-/* ------ platform showcase slider ------ */
-.panel-first .plat-inner{display:block;max-width:1080px;}
-.plat-head{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
-  margin-bottom:clamp(14px,2.4vh,24px);
-}
-.pl-count{font-size:12.5px;font-weight:600;letter-spacing:.12em;color:rgba(17,17,20,.45);white-space:nowrap;}
-.plat-slider{display:flex;align-items:center;gap:clamp(8px,1.4vw,18px);}
-.pl-frame{
-  flex:1;min-width:0;overflow:hidden;border-radius:16px;
-  box-shadow:0 26px 60px rgba(17,17,20,.16);
-  background:#fff;
-}
-.pl-track{
-  display:flex;
-  transition:transform .55s cubic-bezier(.3,.9,.3,1);
-}
-.pl-slide{flex:0 0 100%;}
-.pl-slide img{display:block;width:100%;height:auto;}
-.pl-arrow{
-  flex:0 0 42px;width:42px;height:42px;border-radius:50%;
-  border:1px solid rgba(17,17,20,.14);background:#fff;cursor:pointer;
-  font-size:24px;line-height:1;color:var(--ink);font-family:inherit;
-  display:flex;align-items:center;justify-content:center;padding-bottom:3px;
-  box-shadow:0 4px 14px rgba(17,17,20,.10);
-  transition:all .2s ease;
-}
-.pl-arrow:hover{background:var(--red);border-color:var(--red);color:#fff;transform:scale(1.06);}
-.pl-cap{
-  margin-top:14px;font-size:13.5px;color:var(--grey);line-height:1.5;
-  min-height:1.5em;
-}
-@media (max-width:900px){
-  .pl-arrow{position:absolute;z-index:3;top:50%;transform:translateY(-50%);}
-  .pl-prev{left:10px;}
-  .pl-next{right:10px;}
-  .plat-slider{position:relative;}
-  .pl-arrow:hover{transform:translateY(-50%) scale(1.06);}
-}
 
 /* footer strip inside last panel */
 .foot-note{
@@ -643,12 +611,11 @@ nav > *{pointer-events:auto;}
       </button>
       <div class="drop-menu" id="svcMenu" role="menu"><!-- built from SERVICES --></div>
     </div>
-    <a class="nav-item hide-sm" href="#" data-goto="11">Platform</a>
-    <a class="nav-item hide-sm" href="#" data-goto="12">Contact</a>
+    <a class="nav-item hide-sm" href="#" data-goto="11">Contact</a>
   </div>
   <div class="nav-right">
     <a class="login-btn" href="login.html" title="Log in — client or agent">Login</a>
-    <a class="nav-cta" href="#" data-goto="12">Book a demo</a>
+    <a class="nav-cta" href="#" data-goto="11">Book a demo</a>
   </div>
 </nav>
 
@@ -674,10 +641,10 @@ nav > *{pointer-events:auto;}
         <h1 class="intro-title">All-in-one <span class="red">global business</span> solutions</h1>
         <p class="intro-sub">Purpose-built for global corporate service professionals.<br>Designed for the AI era.</p>
         <div class="intro-ctas">
-          <a class="btn btn-red" href="#" data-goto="12">
+          <a class="btn btn-red" href="#" data-goto="11">
             <span class="lbl-lg">Book a Free Consultation</span><span class="lbl-sm">Book a demo</span>
           </a>
-          <a class="btn btn-ghost" href="#" data-goto="11">
+          <a class="btn btn-ghost" href="#" data-goto="0">
             <span class="lbl-lg">Explore the Platform</span><span class="lbl-sm">Explore platform</span>
           </a>
         </div>
@@ -892,7 +859,7 @@ SERVICES.forEach((s,i)=>{
           <p class="p-benefit"><b>${s.benefit.lead}</b> ${s.benefit.text}</p>
         </div>
         ${s.note?`<p class="p-note">${s.note}</p>`:""}
-        <div class="p-cta"><a class="btn btn-red" href="#" data-goto="12">${s.cta}</a></div>
+        <div class="p-cta"><a class="btn btn-red" href="#" data-goto="11">${s.cta}</a></div>
       </div>
       <div class="p-card">
         <ul>
@@ -903,41 +870,9 @@ SERVICES.forEach((s,i)=>{
   </section>`;
 });
 
-/* platform showcase — slide through the real app before contact */
-const SHOTS = [
-  {img:'assets/app-finance.png',    cap:'Finance dashboard — revenue, expenses and trends at a glance'},
-  {img:'assets/app-entity.png',     cap:'Entity records — the full statutory picture of every company'},
-  {img:'assets/app-compliance.png', cap:'Compliance dashboard — every deadline across the portfolio'},
-  {img:'assets/app-create.png',     cap:'Onboarding — structured, bilingual capture with validation'},
-];
-html += `
-<section class="panel panel-first panel-platform" data-panel="${SERVICES.length}">
-  <div class="panel-inner plat-inner">
-    <div class="plat-head">
-      <div>
-        <div class="p-tag">Inside the platform</div>
-        <h2 class="p-title">See what REDclip looks like</h2>
-      </div>
-      <div class="pl-meta">
-        <span class="pl-count" id="plCount">1 / ${SHOTS.length}</span>
-      </div>
-    </div>
-    <div class="plat-slider">
-      <button class="pl-arrow pl-prev" id="plPrev" aria-label="Previous screen">‹</button>
-      <div class="pl-frame" id="plFrame">
-        <div class="pl-track" id="plTrack">
-          ${SHOTS.map(s=>`<div class="pl-slide"><img src="${s.img}" alt="${s.cap}" loading="lazy"></div>`).join('')}
-        </div>
-      </div>
-      <button class="pl-arrow pl-next" id="plNext" aria-label="Next screen">›</button>
-    </div>
-    <p class="pl-cap" id="plCap">${SHOTS[0].cap}</p>
-  </div>
-</section>`;
-
 /* final contact / lead panel */
 html += `
-<section class="panel panel-contact" data-panel="${SERVICES.length + 1}" id="contact">
+<section class="panel panel-contact" data-panel="${SERVICES.length}" id="contact">
   <div class="contact-inner">
     <div class="contact-info">
       <h2>One Platform for <span class="red">Global Business</span> Management</h2>
@@ -980,7 +915,7 @@ html += `
 </section>`;
 track.innerHTML = html;
 
-const PANEL_COUNT = SERVICES.length + 2; // 13: services, platform showcase, contact
+const PANEL_COUNT = SERVICES.length + 1; // 12: 11 services + contact
 
 /* ================= UNIFIED JOURNEY DRIVE ================= */
 const jWrap   = document.getElementById('journey');
@@ -1044,8 +979,7 @@ const VIDEOS = [
   H3,                               // 09 Embedded Payments
   H2,                               // 10 FinTech · Redclip Pay
   H3,                               // 11 Offshore Services Marketplace
-  H2,                               // 12 Platform showcase
-  H3,                               // 13 Contact
+  H2,                               // 12 Contact
 ];
 
 function startOfSeg(j){ return INTRO + (j === 0 ? 0 : SEG0 + SEG*(j-1)); }
@@ -1170,7 +1104,7 @@ svcMenu.innerHTML = `
   <div class="drop-explore">
     <div class="drop-eyebrow">Explore</div>
     <p>One connected platform for entities, compliance, workflows and payments.</p>
-    <button class="drop-view" role="menuitem" data-goto="11">See the platform →</button>
+    <button class="drop-view" role="menuitem" data-goto="0">See the services →</button>
   </div>
   <div class="drop-cats">
     <div class="drop-eyebrow">Services</div>
@@ -1178,7 +1112,7 @@ svcMenu.innerHTML = `
       ${SERVICES.map((s,i)=>
         `<button role="menuitem" data-goto="${i}"><b>${s.tag}</b><span>${SVC_DESC[i]}</span></button>`
       ).join('')}
-      <button class="full" role="menuitem" data-goto="12"><b>Contact</b><span>Book a free consultation.</span></button>
+      <button class="full" role="menuitem" data-goto="11"><b>Contact</b><span>Book a free consultation.</span></button>
     </div>
   </div>`;
 
@@ -1206,32 +1140,6 @@ const NOTE_IN     = INTRO + 0.02;   // first word appears the moment the page go
 const NOTE_INLEN  = 0.5;            // all words in — quick
 const NOTE_OUT    = INTRO + 0.85;   // short hold, then it leaves
 const NOTE_OUTLEN = 0.4;            // gone fast
-
-/* ================= PLATFORM SLIDER ================= */
-{
-  const trackEl = document.getElementById('plTrack');
-  const countEl = document.getElementById('plCount');
-  const capEl   = document.getElementById('plCap');
-  let idx = 0;
-  function show(i){
-    idx = (i + SHOTS.length) % SHOTS.length;
-    trackEl.style.transform = `translateX(${-idx * 100}%)`;
-    countEl.textContent = `${idx + 1} / ${SHOTS.length}`;
-    capEl.textContent = SHOTS[idx].cap;
-  }
-  document.getElementById('plPrev').addEventListener('click', ()=>show(idx - 1));
-  document.getElementById('plNext').addEventListener('click', ()=>show(idx + 1));
-  /* swipe */
-  const frame = document.getElementById('plFrame');
-  let sx = null;
-  frame.addEventListener('touchstart', e=>{ sx = e.touches[0].clientX; }, {passive:true});
-  frame.addEventListener('touchend', e=>{
-    if (sx === null) return;
-    const dx = e.changedTouches[0].clientX - sx;
-    if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
-    sx = null;
-  }, {passive:true});
-}
 
 /* ================= MAIN LOOP ================= */
 function loop(){
