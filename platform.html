@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inside the platform | REDclip 小红夹</title>
+<meta name="description" content="A look inside REDclip — entity management, compliance tracking, onboarding and finance, in one connected platform.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ED1B34'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='900'>夹</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#ED1B34;
+  --red-dark:#C8102E;
+  --ink:#111114;
+  --grey:#55555c;
+  --bg:#ffffff;
+  --line:rgba(17,17,20,.10);
+  --nav-h:72px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{
+  scroll-behavior:smooth;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+body{
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Helvetica,Arial,sans-serif;
+  font-feature-settings:"cv02","cv03","cv04","cv11";
+  background:var(--bg);color:var(--ink);overflow-x:hidden;
+}
+::selection{background:var(--red);color:#fff;}
+
+/* ---------- NAV (shared with index) ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,3vw,44px);
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid transparent;transition:border-color .3s ease;
+}
+body.scrolled nav{border-bottom-color:var(--line);}
+.logo{display:flex;flex-direction:column;line-height:1;text-decoration:none;}
+.logo .cn{color:var(--red);font-weight:900;font-size:20px;letter-spacing:2px;}
+.logo .en{color:var(--ink);font-weight:800;font-size:21px;letter-spacing:.5px;margin-top:2px;}
+.nav-right{display:flex;align-items:center;gap:clamp(16px,2.2vw,32px);}
+.nav-link{
+  position:relative;background:none;border:none;cursor:pointer;font-family:inherit;
+  text-decoration:none;color:var(--ink);font-weight:500;font-size:14px;letter-spacing:-.01em;
+  white-space:nowrap;transition:color .25s ease;padding:0;
+}
+.nav-link:hover{color:var(--red);}
+.nav-cta{
+  background:var(--red);color:#fff;border-radius:9px;padding:9px 16px;
+  font-weight:600;font-size:14px;text-decoration:none;transition:background .2s,transform .2s;
+}
+.nav-cta:hover{background:var(--red-dark);transform:translateY(-1px);}
+
+/* ---------- HERO ---------- */
+.ph{
+  padding:calc(var(--nav-h) + clamp(56px,10vh,110px)) clamp(22px,5vw,64px) clamp(30px,5vh,56px);
+  max-width:1280px;margin:0 auto;
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  color:var(--red);font-weight:600;font-size:12.5px;letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:16px;
+}
+.eyebrow::before{content:"";width:24px;height:2px;background:var(--red);}
+.ph h1{
+  font-size:clamp(34px,5vw,64px);font-weight:600;letter-spacing:-.04em;line-height:1.06;max-width:16ch;
+}
+.ph h1 .red{color:var(--red);}
+.ph p{
+  margin-top:20px;color:var(--grey);font-size:clamp(15px,1.3vw,18px);line-height:1.6;max-width:56ch;
+}
+
+/* ---------- SIDE INDEX ---------- */
+.tour-nav{
+  position:fixed;left:clamp(14px,2.4vw,34px);top:50%;transform:translateY(-50%);
+  z-index:60;display:flex;flex-direction:column;gap:14px;
+  opacity:0;pointer-events:none;transition:opacity .4s ease;
+}
+.tour-nav.on{opacity:1;pointer-events:auto;}
+.tour-nav button{
+  display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;
+  font-family:inherit;font-size:12.5px;font-weight:500;color:var(--grey);
+  padding:0;transition:color .25s ease;text-align:left;
+}
+.tour-nav .bar{
+  display:block;width:20px;height:2px;border-radius:2px;background:rgba(17,17,20,.2);
+  transition:all .3s cubic-bezier(.3,.9,.3,1);flex:0 0 auto;
+}
+.tour-nav button:hover{color:var(--ink);}
+.tour-nav button.active{color:var(--red);font-weight:600;}
+.tour-nav button.active .bar{width:34px;background:var(--red);}
+@media (max-width:1180px){.tour-nav{display:none;}}
+
+/* ---------- SHOTS ---------- */
+.shot{
+  padding:clamp(40px,9vh,96px) clamp(22px,5vw,64px);
+  max-width:1280px;margin:0 auto;scroll-margin-top:var(--nav-h);
+}
+.shot-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,64px);align-items:start;}
+.shot-num{
+  font-size:12px;font-weight:600;letter-spacing:.18em;color:rgba(17,17,20,.35);margin-bottom:12px;
+}
+.shot h2{font-size:clamp(24px,2.7vw,40px);font-weight:600;letter-spacing:-.03em;line-height:1.12;}
+.shot .cn{margin-top:10px;color:var(--red);font-weight:600;font-size:clamp(13px,1.2vw,16px);letter-spacing:.2em;}
+.shot p{color:var(--grey);font-size:clamp(14.5px,1.2vw,17px);line-height:1.62;}
+.shot ul{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:9px;}
+.shot li{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:clamp(13.5px,1.1vw,15px);line-height:1.5;color:#2b2b31;
+}
+.shot li svg{flex:0 0 17px;width:17px;height:17px;margin-top:1px;}
+.frame{
+  margin-top:clamp(26px,5vh,52px);
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 30px 80px rgba(17,17,20,.16),0 2px 8px rgba(17,17,20,.06);
+  opacity:0;transform:translateY(34px) scale(.985);
+  transition:opacity .8s cubic-bezier(.22,.9,.26,1),transform .8s cubic-bezier(.22,.9,.26,1);
+}
+.frame.in{opacity:1;transform:none;}
+.frame img{display:block;width:100%;height:auto;}
+
+/* ---------- CLOSER ---------- */
+.closer{
+  padding:clamp(50px,10vh,110px) clamp(22px,5vw,64px) clamp(70px,12vh,130px);
+  max-width:1280px;margin:0 auto;text-align:center;border-top:1px solid var(--line);
+}
+.closer h2{font-size:clamp(26px,3vw,42px);font-weight:600;letter-spacing:-.03em;line-height:1.1;}
+.closer h2 .red{color:var(--red);}
+.closer p{margin:16px auto 0;color:var(--grey);font-size:clamp(14.5px,1.2vw,17px);line-height:1.6;max-width:52ch;}
+.closer-ctas{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+  font-weight:600;font-size:14.5px;letter-spacing:-.01em;text-decoration:none;
+  padding:12px 22px;border-radius:10px;border:none;transition:all .2s ease;
+}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 1px 2px rgba(17,17,20,.08),0 6px 18px rgba(237,27,52,.22);}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid rgba(17,17,20,.2);}
+.btn-ghost:hover{border-color:var(--ink);background:rgba(17,17,20,.04);}
+footer{
+  border-top:1px solid var(--line);padding:26px clamp(22px,5vw,64px);
+  text-align:center;font-size:12px;color:rgba(17,17,20,.45);
+}
+
+@media (max-width:860px){
+  .shot-head{grid-template-columns:1fr;gap:18px;}
+  .nav-right .hide-sm{display:none;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html" aria-label="REDclip home">
+    <span class="cn">小红夹</span>
+    <span class="en"><b>RED</b>clip</span>
+  </a>
+  <div class="nav-right">
+    <a class="nav-link hide-sm" href="index.html">Home</a>
+    <a class="nav-link hide-sm" href="index.html#services">Services</a>
+    <a class="nav-link" href="login.html">Login</a>
+    <a class="nav-cta" href="index.html#contact">Book a demo</a>
+  </div>
+</nav>
+
+<header class="ph">
+  <div class="eyebrow">Inside the platform</div>
+  <h1>See what <span class="red">REDclip</span> looks like</h1>
+  <p>A real look at the workspace your team and your clients use every day — entities and statutory records, compliance deadlines, onboarding and finance, all in one connected platform.</p>
+</header>
+
+<div class="tour-nav" id="tourNav"></div>
+<main id="tour"></main>
+
+<section class="closer">
+  <h2>Want a closer look at <span class="red">your</span> workflows?</h2>
+  <p>We'll walk you through the platform with your jurisdictions, your entity types and your team structure.</p>
+  <div class="closer-ctas">
+    <a class="btn btn-red" href="index.html#contact">Book a Free Consultation</a>
+    <a class="btn btn-ghost" href="login.html">Log in to the platform</a>
+  </div>
+</section>
+
+<footer>© REDCLIP PTE. LTD. · 小红夹 · 10 Anson Road, #11-20/21 International Plaza, Singapore 079903 · ceo@redclip.ai</footer>
+
+<script>
+const SHOTS = [
+  {
+    id:'entities', nav:'Entity records', cn:'全球企业管理',
+    title:'Every entity, every record, one place',
+    desc:'Open any company and see its full statutory picture — jurisdiction, agent, officers and the complete document trail.',
+    points:['Statutory records, shareholders, directors and secretaries','Documents, logs and charges on the same screen','VIP and status flags for priority handling','English and Chinese entity details side by side'],
+    img:'assets/app-entity.png', alt:'REDclip entity record for a Singapore company showing statutory information'
+  },
+  {
+    id:'compliance', nav:'Compliance', cn:'合规到期提醒',
+    title:'Never miss a filing deadline',
+    desc:'Every obligation across your whole portfolio in one calendar view — annual returns, AGMs and tax filings, counted and dated.',
+    points:['Live counts by obligation type','Search by entity code, name or obligation','Date-range filtering across the portfolio','Built for teams managing hundreds of entities'],
+    img:'assets/app-compliance.png', alt:'REDclip renewal compliance dashboard listing statutory obligations and due dates'
+  },
+  {
+    id:'onboarding', nav:'Onboarding', cn:'企业文件生成',
+    title:'Onboard people and companies faster',
+    desc:'Structured capture for persons, corporates and entities — with validation built in, so records are clean from the start.',
+    points:['Person, corporate and entity flows in one form','Bilingual capture (English and 中文)','Identity, address and nationality fields with validation','Feeds straight into KYC and document generation'],
+    img:'assets/app-create.png', alt:'REDclip create screen capturing personal and residential information'
+  },
+  {
+    id:'finance', nav:'Finance', cn:'账务进度追踪',
+    title:'See the money at a glance',
+    desc:'Quotations, expenses and recurring revenue summarised the moment you log in, with six-month trends.',
+    points:['Paid, unpaid and recurring quotations at a glance','Revenue versus expense breakdown','Six-month financial trend','Multi-currency ready reporting'],
+    img:'assets/app-finance.png', alt:'REDclip finance dashboard with revenue and expense charts'
+  }
+];
+
+const CHECK = `<svg viewBox="0 0 24 24" fill="none" stroke="#ED1B34" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+
+document.getElementById('tour').innerHTML = SHOTS.map((s,i)=>`
+  <section class="shot" id="${s.id}">
+    <div class="shot-head">
+      <div>
+        <div class="shot-num">${String(i+1).padStart(2,'0')} / ${String(SHOTS.length).padStart(2,'0')}</div>
+        <h2>${s.title}</h2>
+        <div class="cn">${s.cn}</div>
+      </div>
+      <div>
+        <p>${s.desc}</p>
+        <ul>${s.points.map(p=>`<li>${CHECK}${p}</li>`).join('')}</ul>
+      </div>
+    </div>
+    <div class="frame"><img src="${s.img}" alt="${s.alt}" loading="lazy"></div>
+  </section>`).join('');
+
+document.getElementById('tourNav').innerHTML = SHOTS.map(s=>
+  `<button data-to="${s.id}"><span class="bar"></span>${s.nav}</button>`).join('');
+
+document.querySelectorAll('.tour-nav button').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.getElementById(b.dataset.to).scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+
+/* reveal each screenshot as it comes into view */
+const io = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+}, {threshold:0.12});
+document.querySelectorAll('.frame').forEach(f=>io.observe(f));
+
+/* highlight the section you're reading */
+const navBtns = [...document.querySelectorAll('.tour-nav button')];
+const tourNav = document.getElementById('tourNav');
+const spy = new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting) return;
+    navBtns.forEach(b=>b.classList.toggle('active', b.dataset.to === e.target.id));
+  });
+}, {rootMargin:'-45% 0px -45% 0px'});
+SHOTS.forEach(s=>spy.observe(document.getElementById(s.id)));
+
+addEventListener('scroll', ()=>{
+  document.body.classList.toggle('scrolled', scrollY > 10);
+  tourNav.classList.toggle('on', scrollY > window.innerHeight * 0.45);
+}, {passive:true});
+</script>
+</body>
+</html>

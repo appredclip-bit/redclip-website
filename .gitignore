@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# local tooling (dev preview server config)
+.claude/
+
+# ---- raw source media (keep these safe locally / in cloud storage) ----
+# the site only serves the re-encoded copies inside assets/
+herovideo.mp4
+herovideo2.mp4
+hero2.mp4
+hero3.mp4
+reclip2new.mp4
+redclipsecond.mp4
+dashboard.jpeg
+informatiopn.jpeg
+ChatGPT Image*.png
+WhatsApp Image*.jpeg
+
+# ---- superseded / unused build artefacts ----
+3d-version-backup.html
+video-version-backup.html
+assets/three.module.js
+assets/hero2-scrub.mp4
+assets/reclip2-scrub.mp4
+assets/app-dashboard.jpeg

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in | REDclip 小红夹</title>
+<meta name="description" content="Log in to REDclip — client and agent portals.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ED1B34'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='900'>夹</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#ED1B34;
+  --red-dark:#C8102E;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+body{
+  /* client mode (light) — agent mode overrides via [data-mode="agent"] */
+  --tx:#111114;
+  --mut:#6b6f76;
+  --line:rgba(17,17,20,.14);
+  --card:#ffffff;
+  --field:#ffffff;
+  --prim:#111114;
+  --prim-tx:#ffffff;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Helvetica,Arial,sans-serif;
+  font-feature-settings:"cv02","cv03","cv04","cv11";
+  background:#ffffff;
+  color:var(--tx);
+  min-height:100vh;
+}
+/* the agent backdrop lives on a fixed layer so the switch can FADE (gradients can't transition) */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 50% -20%, #7a1220 0%, #4a0b13 26%, rgba(20,3,6,0) 62%),
+    linear-gradient(180deg, #1c0509 0%, #120306 45%, #0a0204 100%);
+  opacity:0;transition:opacity .65s ease;
+}
+body[data-mode="agent"]{
+  --tx:#f7f8f8;
+  --mut:#a3a0a6;
+  --line:rgba(255,255,255,.18);
+  --card:rgba(255,255,255,.05);
+  --field:rgba(0,0,0,.32);
+  --prim:var(--red);
+  --prim-tx:#ffffff;
+}
+body[data-mode="agent"]::before{opacity:1;}
+::selection{background:var(--red);color:#fff;}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:10;
+  height:76px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,3vw,44px);pointer-events:none;
+}
+nav > *{pointer-events:auto;}
+.logo{display:flex;flex-direction:column;line-height:1;text-decoration:none;}
+.logo .cn{color:var(--red);font-weight:900;font-size:20px;letter-spacing:2px;}
+.logo .en{color:var(--tx);font-weight:800;font-size:21px;letter-spacing:.5px;margin-top:2px;transition:color .5s ease;}
+.back{
+  text-decoration:none;color:var(--mut);font-size:14px;font-weight:500;
+  transition:color .3s ease;
+}
+.back:hover{color:var(--red);}
+
+.auth{
+  position:relative;z-index:1;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:104px 18px 40px;
+}
+.auth-card{
+  width:min(420px,100%);
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:clamp(26px,4vw,38px);
+  box-shadow:0 24px 70px rgba(17,17,20,.10);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  transition:background .55s ease,border-color .55s ease;
+}
+
+/* client / agent segmented switch */
+.seg{
+  position:relative;display:grid;grid-template-columns:1fr 1fr;
+  background:rgba(127,127,135,.12);
+  border-radius:11px;padding:4px;margin-bottom:26px;
+}
+.seg-slider{
+  position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);
+  background:var(--prim);border-radius:8px;
+  transition:transform .4s cubic-bezier(.3,.9,.3,1),background .55s ease;
+}
+body[data-mode="agent"] .seg-slider{transform:translateX(100%);}
+.seg button{
+  position:relative;z-index:1;
+  border:none;background:none;cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:600;letter-spacing:-.01em;
+  padding:9px 0;color:var(--mut);transition:color .35s ease;
+}
+.seg button.active{color:var(--prim-tx);}
+
+h1{
+  font-size:clamp(28px,4vw,34px);font-weight:600;letter-spacing:-.03em;line-height:1.1;
+  color:var(--tx);transition:color .5s ease;
+}
+.auth-sub{
+  margin-top:10px;font-size:14px;line-height:1.55;color:var(--mut);
+  transition:color .5s ease;
+}
+.auth-sub b{color:var(--red);font-weight:600;text-transform:lowercase;}
+
+form{margin-top:24px;display:flex;flex-direction:column;gap:14px;}
+label.fld{display:block;font-size:13px;font-weight:500;color:var(--tx);transition:color .5s ease;}
+.fld input{
+  margin-top:7px;width:100%;padding:12px 14px;border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--field);color:var(--tx);
+  font-family:inherit;font-size:14.5px;outline:none;
+  transition:border-color .25s,box-shadow .25s,background .55s ease,color .5s ease;
+}
+.fld input::placeholder{color:var(--mut);opacity:.8;}
+.fld input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(237,27,52,.14);}
+.pw{position:relative;}
+.pw input{padding-right:44px;}
+.eye{
+  position:absolute;right:6px;bottom:5px;height:34px;width:34px;
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:none;cursor:pointer;color:var(--mut);
+}
+.eye svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;}
+.row{display:flex;align-items:center;justify-content:space-between;font-size:13px;}
+.chk{display:flex;align-items:center;gap:8px;color:var(--mut);cursor:pointer;transition:color .5s ease;}
+.chk input{accent-color:var(--red);width:15px;height:15px;}
+.reset{color:var(--red);text-decoration:none;font-weight:500;}
+.reset:hover{text-decoration:underline;}
+.btn-primary{
+  margin-top:6px;width:100%;padding:13px 0;border:none;border-radius:999px;cursor:pointer;
+  font-family:inherit;font-size:15px;font-weight:600;letter-spacing:-.01em;
+  background:var(--prim);color:var(--prim-tx);
+  transition:background .55s ease,transform .2s ease,box-shadow .3s ease;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(17,17,20,.22);}
+body[data-mode="agent"] .btn-primary:hover{box-shadow:0 8px 24px rgba(237,27,52,.4);}
+
+.or{
+  margin:20px 0 14px;display:flex;align-items:center;gap:12px;
+  color:var(--mut);font-size:12.5px;transition:color .5s ease;
+}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line);transition:background .55s ease;}
+.google{
+  width:100%;padding:12px 0;border-radius:999px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-family:inherit;font-size:14.5px;font-weight:600;
+  background:#fff;color:#111114;border:1px solid var(--line);
+  transition:border-color .3s ease,box-shadow .3s ease;
+}
+.google:hover{box-shadow:0 6px 18px rgba(17,17,20,.12);}
+.google svg{width:18px;height:18px;}
+.new{
+  margin-top:20px;text-align:center;font-size:13.5px;color:var(--mut);
+  transition:color .5s ease;
+}
+.new a{color:var(--red);font-weight:600;text-decoration:none;}
+.new a:hover{text-decoration:underline;}
+.portal-note{
+  margin-top:14px;text-align:center;font-size:11.5px;color:var(--mut);opacity:.75;
+  transition:color .5s ease;
+}
+</style>
+</head>
+<body data-mode="client">
+
+<nav>
+  <a class="logo" href="index.html" aria-label="REDclip home">
+    <span class="cn">小红夹</span>
+    <span class="en"><b>RED</b>clip</span>
+  </a>
+  <a class="back" href="index.html">← Back to site</a>
+</nav>
+
+<main class="auth">
+  <div class="auth-card">
+    <div class="seg" role="tablist" aria-label="Portal">
+      <span class="seg-slider" aria-hidden="true"></span>
+      <button type="button" id="segClient" class="active" role="tab" aria-selected="true">Client</button>
+      <button type="button" id="segAgent" role="tab" aria-selected="false">Agent</button>
+    </div>
+
+    <h1>Welcome</h1>
+    <p class="auth-sub">Access your <b id="modeWord">client</b> account and continue your journey with us</p>
+
+    <form id="authForm">
+      <label class="fld">Email Address
+        <input type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+      </label>
+      <label class="fld">Password
+        <span class="pw">
+          <input type="password" name="password" id="pwInput" placeholder="Enter your password" autocomplete="current-password" required>
+          <button type="button" class="eye" id="eyeBtn" aria-label="Show password">
+            <svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </span>
+      </label>
+      <div class="row">
+        <label class="chk"><input type="checkbox" name="keep"> Keep me signed in</label>
+        <a class="reset" href="#" id="resetLink">Reset password</a>
+      </div>
+      <button class="btn-primary" type="submit" id="signBtn">Sign in</button>
+    </form>
+
+    <div class="or"><span>Or continue with</span></div>
+    <button type="button" class="google" id="googleBtn">
+      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.2 5.2C41.4 34.9 44 29.9 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+      Continue with Google
+    </button>
+
+    <p class="new">New to our platform? <a href="#" id="createLink">Create Account</a></p>
+    <p class="portal-note" id="portalNote">Client portal · app.redclip.com</p>
+  </div>
+</main>
+
+<script>
+const PORTALS = {
+  client:{ url:'https://app.redclip.com', note:'Client portal · app.redclip.com' },
+  agent: { url:'https://go.redclip.com',  note:'Agent portal · go.redclip.com'  }
+};
+let mode = 'client';
+
+const segClient = document.getElementById('segClient');
+const segAgent  = document.getElementById('segAgent');
+
+function setMode(m){
+  mode = m;
+  document.body.dataset.mode = m;
+  segClient.classList.toggle('active', m === 'client');
+  segAgent.classList.toggle('active', m === 'agent');
+  segClient.setAttribute('aria-selected', m === 'client');
+  segAgent.setAttribute('aria-selected', m === 'agent');
+  document.getElementById('modeWord').textContent = m;
+  document.getElementById('portalNote').textContent = PORTALS[m].note;
+}
+segClient.addEventListener('click', ()=>setMode('client'));
+segAgent.addEventListener('click', ()=>setMode('agent'));
+
+/* the portals handle real authentication — every action continues there */
+document.getElementById('authForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  window.location.href = PORTALS[mode].url;
+});
+document.getElementById('googleBtn').addEventListener('click', ()=>{ window.location.href = PORTALS[mode].url; });
+document.getElementById('resetLink').addEventListener('click', e=>{ e.preventDefault(); window.location.href = PORTALS[mode].url; });
+document.getElementById('createLink').addEventListener('click', e=>{ e.preventDefault(); window.location.href = PORTALS[mode].url; });
+
+const pw = document.getElementById('pwInput');
+document.getElementById('eyeBtn').addEventListener('click', ()=>{
+  pw.type = pw.type === 'password' ? 'text' : 'password';
+});
+</script>
+</body>
+</html>
