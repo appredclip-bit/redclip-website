@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>REDclip 小红夹 | All-in-One Global Business Solutions</title>
 <meta name="description" content="Manage global entities, automate compliance, streamline corporate workflows and access embedded financial services through one connected platform.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ED1B34'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='900'>夹</text></svg>">
+<link rel="icon" type="image/png" href="assets/brand-icon.png">
+<link rel="apple-touch-icon" href="assets/brand-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -51,10 +52,8 @@ nav > *{pointer-events:auto;}
   gap:clamp(18px,2.4vw,36px);
 }
 .nav-right{justify-self:end;}
-.logo{display:flex;flex-direction:column;line-height:1;cursor:pointer;user-select:none;text-decoration:none;}
-.logo .cn{color:var(--red);font-weight:900;font-size:20px;letter-spacing:2px;}
-.logo .en{color:var(--ink);font-weight:800;font-size:21px;letter-spacing:.5px;margin-top:2px;}
-.logo .en b{font-weight:900;}
+.logo{display:flex;line-height:1;cursor:pointer;user-select:none;text-decoration:none;}
+.logo img{height:44px;width:auto;display:block;}
 .nav-right{display:flex;align-items:center;gap:clamp(14px,2.1vw,30px);}
 .login-btn{
   position:relative;text-decoration:none;color:var(--ink);
@@ -142,8 +141,7 @@ nav > *{pointer-events:auto;}
   nav{display:flex;justify-content:space-between;padding:0 14px;}
   .nav-center{gap:0;}
   .nav-right{gap:12px;}
-  .logo .cn{font-size:16px;letter-spacing:1.5px;}
-  .logo .en{font-size:17px;}
+  .logo img{height:36px;}
   .nav-item{font-size:13px;}
   .login-btn{font-size:12.5px;}
   .nav-cta{padding:8px 12px;font-size:13px;}
@@ -153,7 +151,6 @@ nav > *{pointer-events:auto;}
 @media (max-width:342px){
   .login-btn{display:none;}             /* only the very narrowest phones */
 }
-.logo .en{transition:color .35s ease;}
 .login-btn::after{                    /* thin underline grows in on hover */
   content:"";position:absolute;left:0;right:0;bottom:-6px;height:1.5px;
   background:var(--red);transform:scaleX(0);transform-origin:left;
@@ -169,6 +166,12 @@ nav > *{pointer-events:auto;}
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;
 }
 #vidStack{position:absolute;inset:0;z-index:1;}  /* videos stack in order; each fades in over the last */
+/* one constant veil for the whole journey — the strand always sits behind white */
+.page-veil{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:rgba(255,255,255,.88);
+  opacity:0;   /* entry shows the raw strand; the loop brings the veil in with the wipe */
+}
 .hero-overlay{
   position:absolute;inset:0;display:flex;flex-direction:column;
   justify-content:center;align-items:flex-start;
@@ -222,6 +225,7 @@ nav > *{pointer-events:auto;}
   background:#ffffff;
   display:flex;flex-direction:column;
   overflow:hidden;
+  opacity:0;visibility:hidden;   /* the page opens on the dna; JS fades this in */
 }
 /* hidden UI collage — visible only inside the spotlight around the cursor */
 .reveal-layer{
@@ -262,26 +266,37 @@ nav > *{pointer-events:auto;}
 .lbl-sm{display:none;}   /* short button labels, swapped in on mobile */
 
 /* premium staggered entrance: headline → subhead → CTAs → the app.
-   Children animate, never .intro-inner or .app-frame's transform — those are
-   driven by the scroll zoom and a CSS animation would override the inline style. */
-@keyframes heroRise{
-  from{opacity:0;transform:translateY(20px);}
-  to{opacity:1;transform:translateY(0);}
+   Gated behind .armed so it plays when the hero arrives mid-scroll (and
+   replays if the visitor scrolls back up). Children animate, never
+   .intro-inner or .app-frame's transform — the scroll zoom drives those. */
+/* everything sweeps in from the RIGHT, staggered: title → sub → CTAs → the app.
+   The slide lives on .app-shot (the image), never on .app-frame — the scroll
+   zoom writes .app-frame's transform inline every frame and a CSS animation
+   there would override the dive. */
+@keyframes heroSlide{
+  from{opacity:0;transform:translateX(clamp(40px,5vw,80px));}
+  to{opacity:1;transform:translateX(0);}
+}
+@keyframes shotSlide{
+  from{opacity:0;transform:translateX(clamp(70px,9vw,140px));}
+  to{opacity:1;transform:translateX(0);}
 }
 @keyframes heroFade{ from{opacity:0;} to{opacity:1;} }
-.intro-title,.intro-sub,.intro-ctas{
-  opacity:0;
-  animation:heroRise .95s cubic-bezier(.22,.9,.26,1) forwards;
+.intro-title,.intro-sub,.intro-ctas,.app-shot{opacity:0;}
+.intro.armed .intro-title,.intro.armed .intro-sub,.intro.armed .intro-ctas{
+  animation:heroSlide .8s cubic-bezier(.22,.9,.26,1) forwards;
 }
-.intro-title{animation-delay:.12s;}
-.intro-sub  {animation-delay:.40s;}
-.intro-ctas {animation-delay:.62s;}
-.app-frame{
-  opacity:0;
-  animation:heroFade 1.15s cubic-bezier(.22,.9,.26,1) .82s forwards;
+.intro.armed .intro-title{animation-delay:.05s;}
+.intro.armed .intro-sub  {animation-delay:.22s;}
+.intro.armed .intro-ctas {animation-delay:.38s;}
+.intro.armed .app-shot{
+  animation:shotSlide .9s cubic-bezier(.22,.9,.26,1) .3s forwards;
 }
 @media (prefers-reduced-motion:reduce){
-  .intro-title,.intro-sub,.intro-ctas,.app-frame{animation:none;opacity:1;}
+  .intro-title,.intro-sub,.intro-ctas,.app-shot,
+  .intro.armed .intro-title,.intro.armed .intro-sub,.intro.armed .intro-ctas,.intro.armed .app-shot{
+    animation:none;opacity:1;
+  }
 }
 .app-frame{
   flex:1;min-height:0;
@@ -289,6 +304,7 @@ nav > *{pointer-events:auto;}
   margin:clamp(16px,4vh,44px) auto 0;
   will-change:transform;transform-origin:50% 12%;
   position:relative;z-index:1;      /* the collage must never paint over the tablet */
+  overflow:hidden;                  /* the shot's slide-in stays masked inside the frame */
   /* box-shadow on the container instead of a filter on the PNG:
      filters re-rasterise every frame of the zoom and caused visible jank */
   border-radius:22px;
@@ -312,22 +328,47 @@ nav > *{pointer-events:auto;}
   opacity:0;pointer-events:none;
   will-change:opacity,transform;
 }
-.mid-note::before{
-  content:"";position:absolute;inset:0;
-  /* soft enough that the strand still reads behind the words */
-  background:radial-gradient(64% 56% at 50% 50%,
-    rgba(255,255,255,.82) 0%,
-    rgba(255,255,255,.72) 46%,
-    rgba(255,255,255,.34) 74%,
-    rgba(255,255,255,0) 100%);
-}
+
 .mid-inner{position:relative;text-align:center;max-width:900px;}
+/* side block on entry: brand above the 31-years statement, over the raw video */
+.side-note{
+  position:absolute;inset:0;z-index:3;
+  display:flex;align-items:center;
+  padding:calc(var(--nav-h) + 10px) 7vw 40px;
+  opacity:0;pointer-events:none;will-change:opacity;
+}
+/* deep-red wash behind the words: covers the left half, dissolves into the
+   strand on the right — the copy sits on it in white */
+.side-red{
+  position:absolute;inset:0;
+  background:linear-gradient(100deg,
+    #a80d20 0%,
+    rgba(184,14,35,.96) 30%,
+    rgba(205,17,40,.62) 48%,
+    rgba(237,27,52,0) 68%);
+  opacity:0;will-change:opacity;
+}
+.side-inner{position:relative;max-width:560px;}
+.side-note h2{
+  font-size:clamp(28px,3.6vw,52px);font-weight:700;line-height:1.12;
+  letter-spacing:-.035em;color:#fff;
+}
+.side-note .w{opacity:0;will-change:opacity;}
+.mid-brand{
+  display:flex;flex-direction:column;align-items:flex-start;line-height:1;
+  margin-bottom:clamp(16px,3vh,26px);
+  opacity:0;will-change:opacity;   /* appears with the red wash */
+}
+.mid-brand img{height:clamp(56px,7vw,88px);width:auto;display:block;}
+/* the nav logo yields while the big lockup is centre stage */
+nav .logo{transition:opacity .4s ease;}
+body.brand-center nav .logo{opacity:0;pointer-events:none;}
 .mid-eyebrow{
   display:inline-flex;align-items:center;gap:12px;
-  color:var(--red);font-weight:600;font-size:12.5px;letter-spacing:.16em;
+  color:#fff;font-weight:600;font-size:12.5px;letter-spacing:.16em;
   text-transform:uppercase;margin-bottom:22px;
 }
-.mid-eyebrow::before,.mid-eyebrow::after{content:"";width:26px;height:2px;background:var(--red);}
+.mid-eyebrow::before,.mid-eyebrow::after{content:"";width:26px;height:2px;background:rgba(255,255,255,.75);}
 .mid-note h2{
   font-size:clamp(28px,4.2vw,60px);font-weight:700;line-height:1.12;
   letter-spacing:-.035em;color:var(--ink);max-width:24ch;margin:0 auto;
@@ -340,7 +381,6 @@ nav > *{pointer-events:auto;}
 .mid-note .w{opacity:0;will-change:opacity;}
 @media (max-width:820px){
   .mid-note h2 br{display:none;}
-  .mid-note::before{background:rgba(255,255,255,.92);}
 }
 
 /* ---------- HORIZONTAL TRACK ---------- */
@@ -353,26 +393,43 @@ nav > *{pointer-events:auto;}
 .panel{
   position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
-  padding:calc(var(--nav-h) + 20px) 7vw 60px;
+  padding:calc(var(--nav-h) + 52px) 7vw 46px;  /* clears the feature strip */
   pointer-events:none;              /* only the panel on stage is clickable */
 }
 .panel.show{pointer-events:auto;}
 .panel.bye{pointer-events:none;}
+/* ---- feature strip: page indicator riding under the header while the
+       visitor moves through the service pages; click a name to fly there ---- */
+.feat-strip{
+  position:fixed;top:var(--nav-h);left:0;right:0;z-index:90;
+  display:flex;align-items:center;gap:5px;
+  padding:4px 18px 10px;
+  opacity:0;pointer-events:none;transform:translateY(-8px);
+  transition:opacity .45s ease,transform .45s ease;
+  overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.feat-strip::-webkit-scrollbar{display:none;}
+/* auto margins centre the row when it fits, and let it scroll when it doesn't */
+.feat-strip > :first-child{margin-left:auto;}
+.feat-strip > :last-child{margin-right:auto;}
+body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
+.feat-strip .fdot{flex:0 0 auto;width:3px;height:3px;border-radius:50%;background:rgba(17,17,20,.22);}
+.feat-strip button{
+  flex:0 0 auto;appearance:none;border:0;background:none;cursor:pointer;
+  font-family:inherit;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  color:rgba(17,17,20,.45);padding:4px 10px;border-radius:999px;
+  transition:color .25s,background .25s;white-space:nowrap;
+}
+.feat-strip button:hover{color:var(--ink);}
+.feat-strip button.on{color:#fff;background:var(--red);}
+@media (max-width:900px){
+  .feat-strip{padding:2px 12px 8px;}
+  .feat-strip button{font-size:10.5px;padding:3px 7px;}
+}
+
 /* first service: text directly over the video's end scene, no card */
 .panel-first{background:transparent;}
-/* soft scrim so the text stays readable over the strand — lighter on the
-   left where the big headline sits, denser on the right under the body copy */
-.panel-first::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to left,
-    rgba(255,255,255,.95) 0%,
-    rgba(255,255,255,.92) 38%,
-    rgba(255,255,255,.85) 62%,
-    rgba(255,255,255,.70) 82%,
-    rgba(255,255,255,.50) 100%);
-  opacity:0;transition:opacity .8s ease;
-}
-.panel-first.show::before{opacity:1;}
+/* the constant .page-veil already sits over the strand — panels add nothing */
 /* Linear-style split: eyebrow across the top, headline left, copy right */
 .panel-first .panel-inner{
   display:grid;
@@ -381,13 +438,45 @@ nav > *{pointer-events:auto;}
   align-items:start;
   width:100%;max-width:1240px;margin:0 auto;
   position:relative;z-index:2;
-  opacity:0;transform:translateY(50px);
-  transition:opacity .8s cubic-bezier(.22,.9,.26,1),transform .8s cubic-bezier(.22,.9,.26,1);
 }
+/* side-scroll entrance: the words sweep in from the right, leave to the left,
+   in three staggered waves — eyebrow, headline, then the copy */
+.panel-first .p-tag,
+.panel-first .p-head,
+.panel-first .p-body{
+  opacity:0;transform:translateX(clamp(60px,7vw,110px));
+  transition:opacity .6s cubic-bezier(.22,.9,.26,1),transform .6s cubic-bezier(.22,.9,.26,1);
+}
+.panel-first.show .p-tag,
+.panel-first.show .p-head,
+.panel-first.show .p-body{opacity:1;transform:translateX(0);}
+.panel-first.show .p-tag {transition-delay:0s;}
+.panel-first.show .p-head{transition-delay:.08s;}
+.panel-first.show .p-body{transition-delay:.16s;}
+.panel-first.bye .p-tag,
+.panel-first.bye .p-head,
+.panel-first.bye .p-body{opacity:0;transform:translateX(clamp(-110px,-7vw,-60px));}
+.panel-first.bye .p-tag {transition-delay:0s;}
+.panel-first.bye .p-head{transition-delay:.04s;}
+.panel-first.bye .p-body{transition-delay:.08s;}
 .panel-first .p-tag{grid-column:1/-1;}
 .panel-first .p-body{padding-top:clamp(3px,.7vw,10px);}
 .panel-first .panel-num{display:none;}
-.panel-first .p-card{display:none;}
+/* the feature checklist sits under the headline, compact so a full page fits */
+.p-list{
+  list-style:none;margin-top:clamp(16px,2vh,26px);
+  display:flex;flex-direction:column;gap:clamp(6px,.9vh,10px);
+}
+.p-list.cols{
+  display:grid;grid-template-columns:1fr 1fr;
+  column-gap:clamp(14px,1.6vw,26px);row-gap:clamp(5px,.8vh,9px);
+}
+.p-list li{
+  display:flex;gap:9px;align-items:flex-start;
+  font-size:clamp(11.5px,.95vw,13.5px);line-height:1.45;color:#2b2b31;font-weight:400;
+}
+.p-list .clip{flex:0 0 14px;margin-top:1px;}
+.p-list .clip svg{width:14px;height:14px;}
 .panel-first .p-sub{margin-top:0;max-width:42ch;font-size:clamp(15px,1.35vw,18px);}
 .p-note{margin-top:14px;max-width:42ch;font-size:12.5px;line-height:1.55;color:#8a8a92;}
 /* benefit card: screenshot (or branded placeholder) + huly-style caption */
@@ -437,15 +526,12 @@ nav > *{pointer-events:auto;}
 }
 .panel-first .p-cta .btn-red::before{content:"›";font-size:22px;line-height:1;font-weight:900;}
 .panel-first .p-cta .btn-red:hover{transform:translateX(4px);background:none;}
-.panel-first .panel-num{
-  opacity:0;transform:translateY(30px);
-  transition:opacity .8s ease .12s,transform .8s ease .12s;
+.panel-first .p-cta{display:flex;align-items:center;gap:clamp(18px,2.4vw,34px);flex-wrap:wrap;}
+.p-cta .cta2{
+  color:var(--grey);text-decoration:none;font-size:14px;font-weight:600;letter-spacing:-.01em;
+  border-bottom:1px solid rgba(17,17,20,.18);padding-bottom:1px;transition:color .2s,border-color .2s;
 }
-.panel-first.show .panel-inner{opacity:1;transform:translateY(0);}
-.panel-first.show .panel-num{opacity:1;transform:translateY(0);}
-/* fades away upward while the journey moves on to the next video */
-.panel-first.bye .panel-inner{opacity:0;transform:translateY(-50px);}
-.panel-first.bye::before{opacity:0;}
+.p-cta .cta2:hover{color:var(--ink);border-color:var(--red);}
 .panel-inner{
   display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
   gap:6vw;align-items:center;width:100%;max-width:1280px;
@@ -492,6 +578,204 @@ nav > *{pointer-events:auto;}
   flex:0 0 18px;margin-top:1px;
 }
 .clip svg{display:block;width:18px;height:18px;}
+
+/* ============ SERVICE LAYOUT VARIANTS (mix so pages don't repeat) ============ */
+
+/* concept 1 — lay-center: centred statement, app on stage below */
+.lay-center .panel-inner{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:0;max-width:1100px;
+}
+.lay-center .p-tag::before{display:none;}
+.lay-center .p-tag{margin-bottom:10px;}
+.lay-center .p-title{font-size:clamp(28px,3.4vw,50px);}
+.lay-center .p-sub{margin:12px auto 0;max-width:56ch;}
+.pill-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px;}
+.pill{
+  display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:999px;
+  background:#fff;box-shadow:0 4px 16px rgba(17,17,20,.09);
+  font-size:12.5px;font-weight:600;color:#2b2b31;
+}
+.pill i{width:8px;height:8px;border-radius:50%;}
+.lay-center .p-cta{margin-top:18px;justify-content:center;}
+.lay-center .p-body{margin-top:clamp(16px,3vh,28px);width:100%;display:flex;justify-content:center;}
+.c-shot{
+  max-width:min(860px,94%);border-radius:14px;overflow:hidden;
+  box-shadow:0 30px 70px rgba(17,17,20,.18);background:#fff;
+}
+.c-shot img{display:block;width:100%;max-height:48vh;object-fit:cover;object-position:center top;}
+
+/* concept 2 — lay-float: tilted app shot with floating status cards */
+.lay-float .panel-inner{align-items:center;}
+.lay-float .p-tag{margin-bottom:12px;}
+.lay-float .p-sub{margin-top:12px;}
+.f-wrap{position:relative;max-width:560px;margin-left:auto;}
+.f-shot{
+  border-radius:12px;overflow:hidden;background:#fff;
+  box-shadow:0 34px 80px rgba(17,17,20,.18);
+  transform:perspective(1400px) rotateY(-7deg) rotateX(1.5deg);
+}
+.f-shot img{display:block;width:100%;}
+.f-stat{
+  position:absolute;top:-26px;right:-14px;z-index:2;
+  background:linear-gradient(135deg,#ff4b60 0%,var(--red) 55%,var(--red-dark) 100%);
+  color:#fff;border-radius:14px;padding:12px 18px;
+  box-shadow:0 16px 38px rgba(237,27,52,.35);
+  animation:bob 4.5s ease-in-out infinite alternate;
+}
+.f-stat span{display:block;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.85;}
+.f-stat b{display:block;font-size:19px;font-weight:800;margin-top:3px;letter-spacing:-.01em;}
+.f-toast{
+  position:absolute;bottom:-26px;left:-22px;z-index:2;
+  background:#fff;border-radius:14px;padding:12px 16px;
+  display:flex;align-items:center;gap:11px;
+  box-shadow:0 18px 44px rgba(17,17,20,.17);
+  animation:bob 5.5s ease-in-out infinite alternate-reverse;
+}
+.f-check{
+  flex:0 0 26px;height:26px;border-radius:50%;background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(237,27,52,.35);
+}
+.f-check svg{width:14px;height:14px;}
+.f-toast span{display:block;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9a9aa2;}
+.f-toast b{display:block;font-size:13.5px;font-weight:700;color:var(--ink);margin-top:1px;}
+.f-toast i{display:block;font-style:normal;font-size:10.5px;color:#b3b3ba;margin-top:1px;}
+@keyframes bob{from{transform:translateY(0);}to{transform:translateY(-9px);}}
+.p-list.mini{margin-top:16px;gap:7px;}
+.p-list.mini li{font-size:clamp(12px,.95vw,13.5px);}
+
+/* concept 3 — lay-edit: editorial ghost number + vertical label + status list */
+.lay-edit .panel-inner{align-items:center;}
+.lay-edit .p-tag{display:none;}
+.ed-side{
+  position:absolute;left:2.4vw;top:50%;z-index:2;
+  transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;
+  color:var(--red);font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  padding-top:46px;
+}
+.ed-side::before{
+  content:"";position:absolute;top:0;left:50%;width:1.5px;height:36px;background:var(--red);
+}
+.ed-num{
+  position:absolute;left:3.5vw;top:calc(var(--nav-h) + 8px);z-index:1;
+  font-size:clamp(150px,20vw,280px);font-weight:900;line-height:1;
+  color:transparent;-webkit-text-stroke:2px rgba(17,17,20,.07);
+  user-select:none;pointer-events:none;
+}
+.lay-edit .ed-side,.lay-edit .ed-num{opacity:0;transition:opacity .6s ease .2s;}
+.lay-edit.show .ed-side,.lay-edit.show .ed-num{opacity:1;}
+.lay-edit.bye .ed-side,.lay-edit.bye .ed-num{opacity:0;transition-delay:0s;}
+.lay-edit .p-cta .btn-red{
+  background:#fff;border:1.5px solid var(--red);color:var(--red);
+  padding:11px 20px;border-radius:10px;font-size:14px;box-shadow:none;
+}
+.lay-edit .p-cta .btn-red::before{content:none;}
+.lay-edit .p-cta .btn-red:hover{background:var(--red);color:#fff;transform:none;}
+.ed-list{margin-top:clamp(18px,3vh,28px);max-width:360px;}
+.ed-row{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 2px;border-bottom:1px solid rgba(17,17,20,.08);
+  font-size:13.5px;color:var(--ink);
+}
+.ed-row i{flex:0 0 8px;height:8px;border-radius:50%;}
+.ed-row span{font-weight:600;}
+.ed-row b{margin-left:auto;font-weight:500;color:var(--grey);}
+.ed-row em{font-style:normal;color:#c2c2c8;font-weight:700;}
+.ed-shot{max-width:100%;}
+.ed-cap{margin-top:11px;text-align:right;font-size:12px;color:#9a9aa2;}
+
+@media (max-width:900px){
+  .f-wrap{margin:26px auto 30px;max-width:92%;}
+  .f-shot{transform:none;}
+  .f-stat{top:-18px;right:-4px;padding:9px 13px;}
+  .f-stat b{font-size:16px;}
+  .f-toast{bottom:-18px;left:-4px;padding:9px 12px;}
+  .ed-side,.ed-num{display:none;}
+  .ed-cap{text-align:center;}
+  .c-shot img{max-height:38vh;}
+  .lay-center .p-body{margin-bottom:8px;}
+}
+
+/* ------ breather pages (Partners / About): a SOLID white sheet sweeps in
+        from the right, then the content slides on after it ------ */
+.panel-break{background:transparent;}
+.panel-break::before{
+  content:"";position:absolute;inset:0;background:#fff;
+  transform:translateX(102%);
+  transition:transform .7s cubic-bezier(.22,.9,.26,1);
+}
+.panel-break.show::before{transform:translateX(0);}
+.panel-break.bye::before{transform:translateX(-102%);}
+.break-inner{
+  position:relative;z-index:2;width:100%;max-width:980px;margin:0 auto;text-align:center;
+}
+.panel-break .p-tag{margin-bottom:6px;}
+.b-title{font-size:clamp(26px,3vw,44px);font-weight:700;line-height:1.1;letter-spacing:-.028em;margin-top:6px;}
+.b-sub{margin:14px auto 0;max-width:56ch;color:var(--grey);font-size:clamp(14px,1.2vw,16.5px);line-height:1.65;font-weight:400;}
+.logo-row{
+  margin-bottom:clamp(26px,4.5vh,44px);
+  display:flex;justify-content:center;gap:clamp(14px,2vw,24px);flex-wrap:wrap;
+}
+.logo-ph{
+  width:clamp(140px,16vw,220px);aspect-ratio:16/7;border-radius:16px;
+  border:1.5px dashed rgba(17,17,20,.16);background:#fafafa;
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-ph span{
+  color:rgba(17,17,20,.32);font-size:11.5px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.stat-row{
+  margin-top:clamp(26px,4.5vh,44px);
+  display:flex;justify-content:center;gap:clamp(30px,5.5vw,80px);flex-wrap:wrap;
+}
+.stat-row b{display:block;font-size:clamp(34px,4vw,56px);font-weight:800;letter-spacing:-.03em;color:var(--red);line-height:1;}
+.stat-row span{display:block;margin-top:8px;font-size:12.5px;color:var(--grey);letter-spacing:.03em;}
+/* content waves: slide in from the right once the sheet has landed,
+   leave to the left with it */
+.panel-break .p-tag,.panel-break .b-title,.panel-break .b-sub,
+.panel-break .logo-row,.panel-break .stat-row{
+  opacity:0;transform:translateX(clamp(60px,7vw,110px));
+  transition:opacity .6s cubic-bezier(.22,.9,.26,1),transform .6s cubic-bezier(.22,.9,.26,1);
+}
+.panel-break.show .p-tag,.panel-break.show .b-title,.panel-break.show .b-sub,
+.panel-break.show .logo-row,.panel-break.show .stat-row{opacity:1;transform:translateX(0);}
+.panel-break.show .p-tag  {transition-delay:.30s;}
+.panel-break.show .b-title{transition-delay:.38s;}
+.panel-break.show .b-sub  {transition-delay:.46s;}
+.panel-break.show .stat-row{transition-delay:.56s;}
+/* on the Partners page the logos come out FIRST, the words follow */
+.break-logos.show .logo-row{transition-delay:.28s;}
+.break-logos.show .p-tag  {transition-delay:.52s;}
+.break-logos.show .b-title{transition-delay:.60s;}
+.break-logos.show .b-sub  {transition-delay:.68s;}
+.panel-break.bye .p-tag,.panel-break.bye .b-title,.panel-break.bye .b-sub,
+.panel-break.bye .logo-row,.panel-break.bye .stat-row{
+  opacity:0;transform:translateX(clamp(-110px,-7vw,-60px));
+  transition-delay:0s;
+}
+/* Partners → About is a cross-FADE (user request): Partners leaves by fading
+   out in place, About arrives by fading in — no sideways slide between them */
+.break-logos::before{
+  transition:transform .7s cubic-bezier(.22,.9,.26,1),opacity .6s ease;
+}
+.break-logos.bye::before{transform:translateX(0);opacity:0;}
+.break-logos.bye .p-tag,.break-logos.bye .b-title,.break-logos.bye .b-sub,
+.break-logos.bye .logo-row{transform:none;}
+.break-about::before{
+  transform:none;opacity:0;
+  transition:opacity .7s ease;
+}
+.break-about.show::before{opacity:1;}
+.break-about.bye::before{
+  opacity:1;transform:translateX(-102%);
+  transition:transform .7s cubic-bezier(.22,.9,.26,1);
+}
+.break-about .p-tag,.break-about .b-title,.break-about .b-sub,
+.break-about .stat-row{transform:none;}
+.break-about.bye .p-tag,.break-about.bye .b-title,.break-about.bye .b-sub,
+.break-about.bye .stat-row{transform:translateX(clamp(-110px,-7vw,-60px));}
 
 /* ------ final CTA / contact panel: pops over the closing scene ------ */
 .panel-contact{flex:0 0 100vw;background:transparent;}
@@ -548,6 +832,7 @@ nav > *{pointer-events:auto;}
 .lead-form .full{grid-column:1/-1;}
 .lead-form textarea{resize:vertical;min-height:84px;}
 .lead-form button{grid-column:1/-1;justify-content:center;}
+.form-fine{font-size:11px !important;line-height:1.5;color:rgba(17,17,20,.45) !important;margin-top:-2px;}
 
 
 /* footer strip inside last panel */
@@ -579,15 +864,14 @@ nav > *{pointer-events:auto;}
     margin:18px auto 0;
     border-radius:16px;
   }
-  .panel{padding:calc(var(--nav-h) + 14px) 6vw 70px;overflow-y:auto;align-items:flex-start;}
+  .panel{padding:calc(var(--nav-h) + 40px) 6vw 70px;overflow-y:auto;align-items:flex-start;}
   .panel-inner,.contact-inner{margin:auto 0;}
   .panel-inner{grid-template-columns:1fr;gap:22px;}
   .panel-first .panel-inner{grid-template-columns:1fr;row-gap:18px;}
   .panel-first .p-body{padding-top:0;}
+  .p-list.cols{grid-template-columns:1fr;}
   .p-feature{max-width:100%;margin-top:14px;}
   .p-benefit{font-size:12.5px;padding:11px 13px 12px;}
-  /* single column: veil the whole frame evenly */
-  .panel-first::before{background:rgba(255,255,255,.90);}
   .panel-num{top:auto;bottom:8px;right:4vw;font-size:96px;}
   .p-card li{font-size:13.5px;}
   .contact-inner{grid-template-columns:1fr;gap:28px;}
@@ -601,8 +885,7 @@ nav > *{pointer-events:auto;}
 <!-- ============ NAV ============ -->
 <nav>
   <a class="logo" href="#" id="logoHome" aria-label="REDclip home">
-    <span class="cn">小红夹</span>
-    <span class="en"><b>RED</b>clip</span>
+    <img src="assets/brand-lockup.png" alt="REDclip 小红夹">
   </a>
   <div class="nav-center">
     <div class="nav-drop" id="navDrop">
@@ -611,49 +894,36 @@ nav > *{pointer-events:auto;}
       </button>
       <div class="drop-menu" id="svcMenu" role="menu"><!-- built from SERVICES --></div>
     </div>
-    <a class="nav-item hide-sm" href="#" data-goto="11">Contact</a>
+    <a class="nav-item hide-sm" href="#" data-goto="13">Contact</a>
   </div>
   <div class="nav-right">
-    <a class="login-btn" href="login.html" title="Log in — client or agent">Login</a>
-    <a class="nav-cta" href="#" data-goto="11">Book a demo</a>
+    <a class="nav-cta" href="login.html" title="Log in — client or agent">Login</a>
   </div>
 </nav>
+
+<!-- feature strip: which page you're on, click to skip there (built from SERVICES) -->
+<div class="feat-strip" id="featStrip" aria-label="Platform features"></div>
 
 <!-- ============ JOURNEY : video scrub, then panels slide in from the right ============ -->
 <div id="journey">
   <div class="hero-sticky" id="jSticky">
     <div id="vidStack"><!-- one <video> per service, created from the VIDEOS list --></div>
+    <div class="page-veil"></div><!-- permanent white veil over the strand -->
 
     <!-- opening statement: words reveal one by one as the DNA appears -->
-    <div class="mid-note" id="midNote">
-      <div class="mid-inner">
+    <!-- entry: the opening video auto-plays; brand + 31 years sit at the side -->
+    <div class="side-note" id="midWords">
+      <div class="side-red" id="sideRed"></div>
+      <div class="side-inner">
+        <div class="mid-brand">
+          <img src="assets/brand-lockup-white.png" alt="REDclip 小红夹">
+        </div>
         <div class="mid-eyebrow">31 years in practice</div>
         <h2 data-words>Three decades of corporate services, encoded into one platform.</h2>
       </div>
     </div>
 
     <div class="h-track" id="hTrack"><!-- panels injected by JS --></div>
-
-    <!-- Linear-style dark landing: headline + the real app, then scroll zooms into the DNA -->
-    <div class="intro" id="intro">
-      <div class="reveal-layer" id="revealLayer" aria-hidden="true"></div>
-      <div class="intro-inner" id="introInner">
-        <h1 class="intro-title">All-in-one <span class="red">global business</span> solutions</h1>
-        <p class="intro-sub">Purpose-built for global corporate service professionals.<br>Designed for the AI era.</p>
-        <div class="intro-ctas">
-          <a class="btn btn-red" href="#" data-goto="11">
-            <span class="lbl-lg">Book a Free Consultation</span><span class="lbl-sm">Book a demo</span>
-          </a>
-          <a class="btn btn-ghost" href="#" data-goto="0">
-            <span class="lbl-lg">Explore the Platform</span><span class="lbl-sm">Explore platform</span>
-          </a>
-        </div>
-      </div>
-      <div class="app-frame" id="appFrame">
-        <img class="app-shot" id="appImg" src="assets/app-dashboard.png" alt="REDclip agent portal — finance dashboard at go.redclip.com">
-      </div>
-    </div>
-    <div class="zoom-flash" id="zoomFlash"></div>
   </div>
 </div>
 
@@ -662,159 +932,214 @@ nav > *{pointer-events:auto;}
 /* ================= DATA ================= */
 const SERVICES = [
   {
+    name:"Entities", layout:'center',
+    pills:[['#16a34a','Accurate'],['#f59e0b','Current'],['#ED1B34','Audit-ready']],
     cn:"全球企业管理", icon:'building', shot:'assets/app-entity.png', benefit:{lead:'One source of truth.', text:'Every director, shareholder and filing lives in a single, audit-ready record.'}, tag:"Global Entity Management",
-    title:"Manage Global Entities from One Secure Platform",
-    sub:"Centralise corporate information, statutory records and entity structures across multiple jurisdictions.",
+    title:"Every Entity. One Place.",
+    sub:"Gain complete visibility and control over your global companies, corporate records and statutory obligations — all through one secure platform.",
     bullets:[
-      "Maintain accurate corporate and statutory records",
-      "Track directors, shareholders and beneficial owners",
-      "Visualise multinational entity structures",
-      "Manage annual filings and governance activities",
-      "Access audit-ready records and document histories"
+      "Centralise corporate records, statutory documents and transaction histories",
+      "Maintain digital registers of directors, shareholders and beneficial owners",
+      "Manage multi-jurisdictional entity structures with enterprise-grade IT security",
+      "Keep corporate information accurate, current and audit-ready",
+      "Track ownership, appointments and important corporate changes",
+      "Collaborate securely with clients, internal teams and professional service providers"
     ],
-    cta:"Request an Entity Management Demo"
+    cta:"Manage Your Entities"
   },
   {
+    name:"Verify",
     cn:"智能合规审核", icon:'shield', benefit:{lead:'Faster onboarding.', text:'AI checks documents and flags risk in minutes, not days.'}, tag:"AI Compliance & KYC",
-    title:"Automate KYC, KYB and Compliance Reviews",
+    title:"Know Every Customer. Assess Every Risk.",
     sub:"Improve onboarding efficiency and risk visibility with intelligent, AI-assisted compliance workflows.",
     bullets:[
-      "Automate document and identity checks",
-      "Streamline KYC and KYB onboarding",
-      "Conduct risk-based customer assessments",
-      "Support ongoing compliance monitoring",
-      "Maintain clear compliance review trails",
-      "Escalate higher-risk cases for human review"
+      "Automate document, identity and business verification checks",
+      "Streamline KYC, KYB and customer due diligence workflows",
+      "Conduct risk-based customer and entity assessments",
+      "Generate configurable onboarding risk scores",
+      "Classify applicants by low, medium or high risk",
+      "Support ongoing compliance monitoring and periodic reviews",
+      "Maintain clear, audit-ready compliance trails",
+      "Escalate higher-risk cases for enhanced due diligence and human review"
     ],
     cta:"Automate Your KYC Process"
   },
   {
-    cn:"合规到期提醒", icon:'bell', shot:'assets/app-compliance.png', benefit:{lead:'Zero missed deadlines.', text:'Automatic reminders arrive before every statutory due date.'}, tag:"Compliance Due Date Reminder",
-    title:"Never Miss a Statutory Filing Deadline",
-    sub:"Manage recurring obligations and regulatory due dates through a central compliance calendar.",
+    name:"Comply", layout:'float',
+    float:{statLabel:'Renewals due', statValue:'25 entities', toastTag:'Compliance', toastMsg:'Every deadline tracked'},
+    cn:"合规到期提醒", icon:'bell', shot:'assets/app-compliance.png', benefit:{lead:'Zero missed deadlines.', text:'Automatic reminders arrive before every statutory due date.'}, tag:"Compliance Deadline Tracking",
+    title:"Every Deadline. Every Jurisdiction.",
+    sub:"Manage recurring obligations, statutory filings and regulatory due dates through one central compliance calendar.",
     bullets:[
-      "Track annual returns and statutory filings",
-      "Monitor licence and registration renewals",
-      "Receive automated deadline reminders",
-      "Escalate overdue or incomplete actions",
-      "View compliance status across every entity",
-      "Coordinate responsible teams and service providers"
+      "Track annual returns, statutory filings, completion stages and submission statuses",
+      "Monitor licence, permit and registration renewals",
+      "Send automated deadline reminders to clients, agents and responsible teams",
+      "Escalate overdue, incomplete or high-priority actions",
+      "View real-time compliance status across every entity",
+      "Coordinate internal teams and professional service providers",
+      "Maintain a clear, audit-ready history of compliance activities"
     ],
-    cta:"Start Tracking Compliance Deadlines"
+    cta:"Start Tracking Deadlines"
   },
   {
+    name:"Flow", layout:'edit',
+    edList:[['#ED1B34','Enquiries','12 new'],['#f59e0b','Onboarding','18 active'],['#16a34a','Completed','45 clients']],
+    edCaption:'One pipeline. Every client. Always moving.',
     cn:"自动业务流程", icon:'flow', shot:'assets/app-create.png', benefit:{lead:'From lead to delivery.', text:'Every client step captured in one trackable workflow.'}, tag:"CRM & Workflow Automation",
-    title:"Automate Your Complete Client Journey",
-    sub:"Connect business development, onboarding and service delivery through consistent, trackable workflows.",
+    title:"Every Client. One Continuous Flow.",
+    sub:"Connect prospect engagement, client onboarding, company setup and ongoing service delivery through consistent, trackable workflows.",
     bullets:[
-      "Centralise client and prospect information",
-      "Automate lead nurturing and follow-ups",
-      "Create digital onboarding workflows",
-      "Route tasks and approvals automatically",
-      "Monitor service requests and delivery progress",
-      "Maintain a complete communication history"
+      "Centralise client, prospect and contact information",
+      "Record prospect pain points, enquiries, requirements and communications",
+      "Track every sales stage from initial enquiry to conversion",
+      "Manage the complete journey from onboarding to company setup",
+      "Automate lead nurturing, reminders and follow-ups",
+      "Create customised digital onboarding workflows",
+      "Send targeted email campaigns, updates and service announcements",
+      "Route tasks, documents and approvals automatically",
+      "Monitor service requests, deliverables and completion stages",
+      "Maintain a complete, searchable communication and activity history",
+      "Give teams a clear view of the next action at every stage"
     ],
     cta:"Automate Your Client Workflows"
   },
   {
+    name:"Documents",
     cn:"企业文件生成", icon:'file', benefit:{lead:'Minutes, not hours.', text:'Resolutions and forms generated straight from live entity data.'}, tag:"Document Automation",
-    title:"Generate Accurate Corporate Documents Faster",
-    sub:"Turn verified customer and entity data into consistent, professional documents.",
+    title:"Every Document. Always Up to Date.",
+    sub:"Turn verified client and entity data into accurate, consistent and professional corporate documents — faster.",
     bullets:[
-      "Generate resolutions, forms and agreements",
-      "Populate documents using existing platform data",
-      "Manage approved templates and standard clauses",
-      "Route documents for review and approval",
-      "Support electronic-signature workflows",
-      "Maintain secure versions and document histories"
+      "Create transactions and task lists automatically upon payment",
+      "Generate resolutions, statutory forms, agreements and supporting documents",
+      "Populate documents using verified client and entity data",
+      "Manage approved templates, standard clauses and jurisdiction-specific formats",
+      "Route documents to clients, teams and service providers for review and approval",
+      "Support electronic signatures and digital approval workflows",
+      "Track preparation, submission, filing and completion stages",
+      "Update entity records once government filings are completed",
+      "Maintain secure document versions, transaction records and audit histories",
+      "Reduce repetitive data entry and document preparation errors"
     ],
     cta:"Explore Document Automation"
   },
   {
+    name:"Accounts", layout:'float',
+    float:{statLabel:'Outstanding (unpaid)', statValue:'620.00 SGD', toastTag:'Accounting status', toastMsg:'On track'},
     cn:"账务进度追踪", icon:'chart', shot:'assets/app-finance.png', benefit:{lead:'Portfolio at a glance.', text:'See every entity\'s accounting status the moment you log in.'}, tag:"Accounting Status Tracking",
-    title:"Track Accounting Progress Across Every Entity",
-    sub:"See what has been completed, what is outstanding and what requires immediate action.",
+    title:"Every Account. Complete Visibility.",
+    sub:"See what has been completed, what remains outstanding and what requires immediate attention across every entity.",
     bullets:[
-      "Monitor bookkeeping progress",
-      "Track financial statement preparation",
-      "Manage tax and reporting deadlines",
-      "Assign work to teams or external accountants",
-      "Identify missing records and delayed tasks",
-      "View portfolio-wide accounting dashboards"
+      "Monitor bookkeeping progress and completion status",
+      "Track the preparation, review and approval of financial statements",
+      "Manage tax, financial reporting and government filing deadlines",
+      "Track the submission and completion status of tax filings",
+      "Assign work to internal teams, external accountants and service providers",
+      "Identify missing records, unresolved queries and delayed tasks",
+      "Send reminders for outstanding information and upcoming deadlines",
+      "View accounting progress across your entire entity portfolio",
+      "Maintain a clear history of tasks, submissions and completed actions"
     ],
     cta:"Improve Accounting Visibility"
   },
   {
-    cn:"智能生态系统", icon:'cpu', benefit:{lead:'AI that assists.', text:'Agents handle the routine while your team keeps every approval.'}, tag:"Agentic AI Infrastructure",
-    title:"Build an AI-Ready Business Operation",
-    sub:"Deploy intelligent agents that assist with operational tasks while keeping people in control of important decisions.",
+    name:"Intelligence",
+    cn:"智能秘书", icon:'cpu', benefit:{lead:'Simply tell it what you need.', text:'“Prepare a transfer of shares in Entity XXXX from shareholder XXX Wong to XXX Tan.” The AI Secretary finds the workflow, creates the task list and prepares the documents for authorised human review and approval.'}, tag:"AI Secretary · Agentic AI",
+    title:"Intelligence That Works for You.",
+    sub:"Build an AI-ready operation with an intelligent secretary that understands instructions, supports your team and coordinates routine work — while people remain in control of important decisions.",
     bullets:[
-      "Automate repetitive operational activities",
-      "Extract and analyse information from documents",
-      "Coordinate tasks across connected workflows",
-      "Apply approval rules and human checkpoints",
-      "Record actions for accountability",
-      "Scale AI capabilities across business functions"
+      "Access a built-in AI agent across the platform",
+      "Automate repetitive administrative and operational activities",
+      "Extract, organise and analyse information from documents",
+      "Auto-populate verified KYC and KYB details into client and entity profiles",
+      "Coordinate tasks across entities, teams and connected workflows",
+      "Use natural-language instructions to initiate complex processes",
+      "Generate task lists and prepare the required documents for review",
+      "Monitor deadlines, outstanding items and required follow-ups",
+      "Apply approval rules, user permissions and human checkpoints",
+      "Escalate exceptions and higher-risk decisions for human review",
+      "Record instructions, actions and decisions for accountability",
+      "Scale intelligent automation as your organisation grows"
     ],
-    cta:"Build Your AI Infrastructure"
+    cta:"Meet Your AI Secretary",
+    cta2:"Build Your AI Workforce"
   },
   {
-    cn:"客户专属门户", icon:'usercheck', benefit:{lead:'Fewer email chains.', text:'Clients fetch their own records, statuses and documents securely.'}, tag:"Secure Client Portal",
-    title:"Give Clients Secure Access to Their Corporate Records",
-    sub:"Create a convenient digital workspace where customers can access information and interact with your team.",
+    name:"Portal",
+    cn:"客户专属门户", icon:'usercheck', benefit:{lead:'Less administration. Better client service.', text:'Reduce repetitive document requests, email follow-ups and status enquiries while giving clients greater visibility and control.'}, tag:"Secure Client Portal",
+    title:"Their Entities. Their Records. Your Time Back.",
+    sub:"Give every client a secure digital workspace for their own entity records — clients find information, retrieve documents and submit requests independently.",
     bullets:[
-      "Provide secure access at any time",
-      "Share statutory records and corporate documents",
-      "Collect files through secure uploads",
-      "Display compliance and service statuses",
-      "Manage requests and communications",
-      "Control access through user permissions"
+      "Give authorised clients secure, anytime access to their own entities",
+      "Share statutory registers, corporate records and important documents",
+      "Let clients retrieve information without waiting for manual assistance",
+      "Allow clients to upload files and supporting documents securely",
+      "Display compliance deadlines, filing progress and service statuses",
+      "Manage enquiries, service requests and communications in one place",
+      "Communicate directly through Redclip Chat",
+      "Send service updates, reminders and document notifications",
+      "Protect information through role-based access and user permissions",
+      "Maintain a complete record of client activities and communications",
+      "Customise colours, branding and themes for a bespoke client experience"
     ],
     cta:"Create Your Client Portal"
   },
   {
+    name:"Finance",
     cn:"嵌入支付方案", icon:'card', benefit:{lead:'Pay without leaving.', text:'Checkout happens right inside the customer journey.'}, tag:"Embedded Payments",
-    title:"Embed Payments into the Customer Journey",
-    sub:"Let customers purchase services and make payments without leaving your platform experience.",
+    title:"From Payment to Service. Seamlessly.",
+    sub:"Let customers purchase services and make payments without leaving your platform — creating a faster, simpler and more connected experience.",
     bullets:[
-      "Accept payments within digital workflows",
-      "Simplify checkout and payment collection",
-      "Connect transactions with customer records",
-      "Automate payment status updates",
-      "Improve reconciliation visibility",
-      "Deliver a consistent branded experience"
+      "Accept payments directly within digital workflows",
+      "Let clients purchase services through the client portal",
+      "Simplify checkout, invoicing and payment collection",
+      "Connect every transaction to the relevant client, entity and service",
+      "Trigger tasks and service workflows automatically after successful payment",
+      "Update payment and transaction statuses automatically",
+      "Give teams clear visibility over paid and outstanding transactions",
+      "Maintain a complete history of payments and service orders",
+      "Deliver a consistent, branded payment experience"
     ],
     cta:"Explore Embedded Payments"
   },
   {
-    cn:"金融支付科技", icon:'banknote', benefit:{lead:'Borderless by design.', text:'Digital and cross-border payments connected to your workflows.'}, tag:"FinTech · Redclip Pay",
-    title:"Simplify Digital and Cross-Border Payments",
-    sub:"Redclip Pay connects payment capabilities with the wider global business services ecosystem.",
+    name:"Redclip Pay",
+    cn:"金融支付科技", icon:'banknote', benefit:{lead:'No finance department? No problem.', text:'From order to completion — payment collection, reconciliation, document generation and service delivery in one connected journey.'}, tag:"FinTech · Redclip Pay",
+    title:"Payments Made Effortless.",
+    sub:"Simplify digital and cross-border payment management with one connected solution — from customer collection to business settlement.",
     bullets:[
-      "Facilitate convenient digital payments",
-      "Support eligible cross-border transactions",
-      "Track transaction and settlement statuses",
-      "Connect payments with business workflows",
-      "Improve the customer payment experience",
-      "Access integration-ready payment capabilities"
+      "Accept eligible digital and cross-border payments",
+      "Automatically reconcile payments against purchased services",
+      "Tag transactions to the relevant client, agent profile and entity",
+      "Reduce manual payment matching and repetitive data entry",
+      "Monitor collections, transaction statuses and settlements in one place",
+      "Schedule payouts to your designated business account",
+      "Maintain clear transaction records for reporting and reconciliation",
+      "Control payment activities through one central dashboard"
     ],
-    cta:"Discover Redclip Pay",
-    note:"Services and availability may vary by market, licence, provider and customer eligibility."
+    cta:"Explore Redclip Pay",
+    note:"Payment services, supported markets, currencies, settlement schedules and availability are subject to jurisdiction, provider approval and customer eligibility."
   },
   {
-    cn:"离岸服务市场", icon:'globe', benefit:{lead:'Global reach, one login.', text:'Compare and purchase services across jurisdictions from one place.'}, tag:"Offshore Services Marketplace",
-    title:"Access Offshore Corporate Services in One Marketplace",
-    sub:"Help customers and professional agents find and purchase services delivered by eligible providers across international jurisdictions.",
+    name:"Marketplace",
+    cn:"离岸服务市场", icon:'globe', benefit:{lead:'Go global without going it alone.', text:'Serve clients across more jurisdictions through a connected network of local providers — without acting as the registered filing agent in each location.'}, tag:"Offshore Services Marketplace",
+    title:"Every Jurisdiction. One Marketplace.",
+    sub:"Access company formation, administration and transactional corporate services across international jurisdictions — even in markets outside your existing network or expertise.",
     bullets:[
-      "Explore services by country or jurisdiction",
-      "Compare available packages and pricing",
-      "Connect with qualified local providers",
-      "Purchase incorporation and administration services",
-      "Submit required information and documents online",
-      "Track orders and service delivery progress"
+      "Explore corporate services by country or jurisdiction",
+      "Place orders in jurisdictions your team does not currently support",
+      "Connect with eligible, qualified local service providers",
+      "Purchase company incorporation and ongoing administration services",
+      "Order ad hoc corporate transactions and statutory services",
+      "Compare available service packages, requirements and pricing",
+      "Submit client and entity information through integrated digital workflows",
+      "Generate and manage documents for each service transaction",
+      "Track orders, requirements and service-delivery progress",
+      "Maintain a central record of communications, documents and completed services",
+      "Expand your service coverage without establishing operations in every market"
     ],
-    cta:"Explore Offshore Services",
-    note:"Regulated activities remain subject to applicable laws, licensing rules and provider acceptance."
+    cta:"Explore the Marketplace",
+    cta2:"Become a Service Provider",
+    note:"Marketplace access and services are subject to applicable laws, licensing requirements, provider eligibility, customer acceptance and jurisdiction-specific restrictions."
   }
 ];
 
@@ -836,47 +1161,155 @@ const ICONS = {
 };
 
 /* ================= BUILD PANELS ================= */
+/* two "breather" pages (Partners + About) sit between Accounts (service 5)
+   and Intelligence (service 6), so panel order is:
+   services 0–5 · partners · about · services 6–10 · contact */
+const CONTACT_PANEL = SERVICES.length + 2;                 // 13
+const panelOfService = i => i < 6 ? i : i + 2;
+
 const track = document.getElementById('hTrack');
 let html = "";
 SERVICES.forEach((s,i)=>{
-  html += `
-  <section class="panel panel-first" data-panel="${i}">
-    <div class="panel-num">${String(i+1).padStart(2,"0")}</div>
+  const num  = String(i+1).padStart(2,"0");
+  const ctas = `
+        <div class="p-cta">
+          <a class="btn btn-red" href="#" data-goto="${CONTACT_PANEL}">${s.cta}</a>
+          <a class="cta2" href="#" data-goto="${CONTACT_PANEL}">${s.cta2 || 'Book a Demo'}</a>
+        </div>`;
+  const shotImg = `<img src="${s.shot}" alt="${s.tag} — inside the REDclip platform" loading="lazy">`;
+
+  if (s.layout === 'center'){
+    /* concept 1: everything centred, the app takes the stage below */
+    html += `
+  <section class="panel panel-first lay-center" data-panel="${panelOfService(i)}">
+    <div class="panel-inner">
+      <div class="p-tag">${s.tag} / ${num}</div>
+      <div class="p-head">
+        <h2 class="p-title">${s.title}</h2>
+        <p class="p-sub">${s.sub}</p>
+        <div class="pill-row">
+          ${s.pills.map(p=>`<span class="pill"><i style="background:${p[0]}"></i>${p[1]}</span>`).join('')}
+        </div>
+        ${ctas}
+      </div>
+      <div class="p-body"><div class="c-shot">${shotImg}</div></div>
+    </div>
+  </section>`;
+
+  } else if (s.layout === 'float'){
+    /* concept 2: split with a tilted app shot and floating status cards */
+    html += `
+  <section class="panel panel-first lay-float" data-panel="${panelOfService(i)}">
+    <div class="panel-inner">
+      <div class="p-head">
+        <div class="p-tag">${num} — ${s.tag}</div>
+        <h2 class="p-title">${s.title}</h2>
+        <p class="p-sub">${s.sub}</p>
+        <ul class="p-list mini">
+          ${s.bullets.slice(0,5).map(b=>`<li><span class="clip">${CLIP_SVG}</span>${b}</li>`).join("")}
+        </ul>
+        ${ctas}
+      </div>
+      <div class="p-body">
+        <div class="f-wrap">
+          <div class="f-shot">${shotImg}</div>
+          <div class="f-stat"><span>${s.float.statLabel}</span><b>${s.float.statValue}</b></div>
+          <div class="f-toast">
+            <span class="f-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>
+            <div><span>${s.float.toastTag}</span><b>${s.float.toastMsg}</b><i>Updated just now</i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>`;
+
+  } else if (s.layout === 'edit'){
+    /* concept 3: editorial — pared right down (user request: no number,
+       no side label, no status list, no big button) */
+    html += `
+  <section class="panel panel-first lay-edit" data-panel="${panelOfService(i)}">
+    <div class="panel-inner">
+      <div class="p-head">
+        <h2 class="p-title">${s.title}</h2>
+        <p class="p-sub">${s.sub}</p>
+        <div class="p-cta"><a class="cta2" href="#" data-goto="${CONTACT_PANEL}">${s.cta2 || 'Book a Demo'}</a></div>
+      </div>
+      <div class="p-body">
+        <div class="c-shot ed-shot">${shotImg}</div>
+        <p class="ed-cap">${s.edCaption}</p>
+      </div>
+    </div>
+  </section>`;
+
+  } else {
+    /* default split layout (pages without a screenshot yet) */
+    html += `
+  <section class="panel panel-first" data-panel="${panelOfService(i)}">
+    <div class="panel-num">${num}</div>
     <div class="panel-inner">
       <div class="p-tag">${s.tag}</div>
       <div class="p-head">
         <div class="p-icon" aria-hidden="true">${ICONS[s.icon]||''}</div>
         <h2 class="p-title">${s.title}</h2>
         <div class="p-cn">${s.cn}</div>
+        <ul class="p-list${s.bullets.length>7?' cols':''}">
+          ${s.bullets.map(b=>`<li><span class="clip">${CLIP_SVG}</span>${b}</li>`).join("")}
+        </ul>
       </div>
       <div class="p-body">
         <p class="p-sub">${s.sub}</p>
         <div class="p-feature${s.shot?' has-shot':''}">
           <div class="p-shot">${s.shot
-            ? `<img src="${s.shot}" alt="${s.tag} — inside the REDclip platform" loading="lazy">`
-            : `<div class="ph"><span class="ph-num">${String(i+1).padStart(2,'0')}</span><span class="ph-tag">${s.tag}</span></div>`}
+            ? shotImg
+            : `<div class="ph"><span class="ph-num">${num}</span><span class="ph-tag">${s.tag}</span></div>`}
           </div>
           <p class="p-benefit"><b>${s.benefit.lead}</b> ${s.benefit.text}</p>
         </div>
         ${s.note?`<p class="p-note">${s.note}</p>`:""}
-        <div class="p-cta"><a class="btn btn-red" href="#" data-goto="11">${s.cta}</a></div>
-      </div>
-      <div class="p-card">
-        <ul>
-          ${s.bullets.map(b=>`<li><span class="clip">${CLIP_SVG}</span>${b}</li>`).join("")}
-        </ul>
+        ${ctas}
       </div>
     </div>
   </section>`;
+  }
+
+  /* after Accounts: the two breather pages — a solid white sheet sweeps in
+     right-to-left, then the content slides on (logos first on Partners) */
+  if (i === 5){
+    html += `
+  <section class="panel panel-break break-logos" data-panel="6">
+    <div class="break-inner">
+      <div class="logo-row">
+        <div class="logo-ph"><span>Your logo</span></div>
+        <div class="logo-ph"><span>Your logo</span></div>
+        <div class="logo-ph"><span>Your logo</span></div>
+      </div>
+      <div class="p-tag">Who we work with</div>
+      <h2 class="b-title">In good company.</h2>
+      <p class="b-sub">Corporate service firms, professional agents and their clients run their day-to-day on REDclip — across borders and jurisdictions.</p>
+    </div>
+  </section>
+  <section class="panel panel-break break-about" data-panel="7">
+    <div class="break-inner">
+      <div class="p-tag">About us</div>
+      <h2 class="b-title">Built on 31 years of practice.</h2>
+      <p class="b-sub">REDclip 小红夹 was founded in Singapore by Aries Wong 黄有榮 after three decades in corporate services. Every workflow on this platform encodes how seasoned practitioners actually run entities, filings and compliance — so your team works the way the best in the field do.</p>
+      <div class="stat-row">
+        <div><b>31</b><span>years in practice</span></div>
+        <div><b>11</b><span>connected solutions</span></div>
+        <div><b>1</b><span>platform for global business</span></div>
+      </div>
+    </div>
+  </section>`;
+  }
 });
 
 /* final contact / lead panel */
 html += `
-<section class="panel panel-contact" data-panel="${SERVICES.length}" id="contact">
+<section class="panel panel-contact" data-panel="${CONTACT_PANEL}" id="contact">
   <div class="contact-inner">
     <div class="contact-info">
-      <h2>One Platform for <span class="red">Global Business</span> Management</h2>
-      <p class="lead">Bring entity management, compliance, KYC, document automation, accounting workflows, client services and payment capabilities into one connected ecosystem.</p>
+      <h2>Everything Your Global Business Needs. <span class="red">Connected.</span></h2>
+      <p class="lead">Manage entities, automate compliance and KYC, generate documents, coordinate accounting workflows, serve clients and collect payments through one connected ecosystem. From incorporation to ongoing administration, every workflow, record and transaction stays connected — giving your team greater visibility, control and efficiency.</p>
       <div class="contact-list">
         <a href="tel:+6562288766"><span class="ci"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.9 15.9 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .57 3.6 1 1 0 0 1-.25 1z"/></svg></span>+65 6228 8766 &nbsp;·&nbsp; +65 8676 7676 (WhatsApp)</a>
         <a href="mailto:ceo@redclip.ai"><span class="ci"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></svg></span>ceo@redclip.ai</a>
@@ -887,27 +1320,23 @@ html += `
     </div>
     <div class="lead-card">
       <h3>Discover the Right Solution for Your Business</h3>
-      <p>Tell us about your operational requirements, target jurisdictions and current challenges. Our team will help you identify the most suitable solutions.</p>
+      <p>Tell us about your operations, target jurisdictions and current challenges. Our team will help you identify the right combination of solutions for your business.</p>
       <form class="lead-form" id="leadForm">
-        <input type="text" name="name" placeholder="Your name" required>
-        <input type="email" name="email" placeholder="Work email" required>
-        <input type="text" name="company" placeholder="Company" class="full">
-        <select name="service" class="full">
-          <option value="">Which solution interests you?</option>
-          <option>Global Entity Management</option>
-          <option>AI Compliance &amp; KYC</option>
-          <option>Compliance Due Date Reminder</option>
-          <option>CRM &amp; Workflow Automations</option>
-          <option>Document Automation</option>
-          <option>Tracking Accounting Status</option>
-          <option>Agentic AI Infrastructure</option>
-          <option>Client Portal</option>
-          <option>Embedded Payments</option>
-          <option>FinTech (Redclip Pay)</option>
-          <option>Offshore Marketplace</option>
+        <input type="text" name="name" placeholder="Full name" required>
+        <input type="email" name="email" placeholder="Business email" required>
+        <input type="tel" name="phone" placeholder="Business telephone (incl. country code)">
+        <input type="text" name="company" placeholder="Company name">
+        <input type="text" name="country" placeholder="Country or region">
+        <select name="entities">
+          <option value="">Number of entities managed</option>
+          <option>0–100</option>
+          <option>101–500</option>
+          <option>501–1,000</option>
+          <option>More than 1,000</option>
         </select>
-        <textarea name="message" class="full" placeholder="Your operational requirements, target jurisdictions and current challenges…"></textarea>
-        <button type="submit" class="btn btn-red">Book a Free Consultation</button>
+        <textarea name="message" class="full" placeholder="Current challenges (optional) — operational, compliance or technology challenges you would like to address…"></textarea>
+        <button type="submit" class="btn btn-red">Find My Solution</button>
+        <p class="form-fine full">By submitting this form, you agree that our team may contact you regarding your enquiry. Your information will be handled in accordance with our Privacy Policy.</p>
       </form>
     </div>
   </div>
@@ -915,7 +1344,7 @@ html += `
 </section>`;
 track.innerHTML = html;
 
-const PANEL_COUNT = SERVICES.length + 1; // 12: 11 services + contact
+const PANEL_COUNT = SERVICES.length + 3; // 14: 11 services + partners + about + contact
 
 /* ================= UNIFIED JOURNEY DRIVE ================= */
 const jWrap   = document.getElementById('journey');
@@ -926,85 +1355,61 @@ const panels = [...track.querySelectorAll('.panel')];
    Segment k scrubs VIDEOS[k]; its service pops on the end frame; the next
    video crossfades in as the next segment starts. Later segments simply hold
    the last available frame until the remaining clips are added below. */
-const INTRO = 2.6;                  // viewports for the landing + microscope dive
-const SEG0 = 3;                     // viewports for the first scrub
-const SEG  = 2;                     // viewports for every later scrub
+const SEG0 = 1;                     // breathing room after the opening spin parks
+const BASE = SEG0;                  // where the service segments begin
+const SEG  = 2;                     // viewports per service scrub
 
-const introEl    = document.getElementById('intro');
-const introInner = document.getElementById('introInner');
-const appFrame   = document.getElementById('appFrame');
-const appImg     = document.getElementById('appImg');
-const zoomFlash  = document.getElementById('zoomFlash');
-
-/* microscope target: the centre of the app's VISIBLE area at rest */
-const ZMAX = 12;                    // final magnification before the white blow-out
-let OX = 0.5, OY = 0.5;             // target as fractions of the image
-let P0 = {x:0, y:0};                // that point's resting position on screen
-function measureIntro(){
-  let el = appImg, x = 0, y = 0;
-  while (el && el !== introEl){ x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; }
-  const w = appImg.offsetWidth, h = appImg.offsetHeight || 1;
-  const visH = Math.max(120, window.innerHeight - y);   // part of the app on screen
-  OX = 0.5;
-  OY = Math.min(0.92, (visH * 0.5) / h);
-  P0 = { x: x + w*OX, y: y + h*OY };
-}
-appImg.addEventListener('load', measureIntro);
-measureIntro();
-
-/* cursor spotlight: the UI collage is revealed only around the pointer */
-const revealLayer = document.getElementById('revealLayer');
-introEl.addEventListener('pointermove', e=>{
-  revealLayer.style.setProperty('--mx', e.clientX + 'px');
-  revealLayer.style.setProperty('--my', e.clientY + 'px');
-}, {passive:true});
-introEl.addEventListener('pointerleave', ()=>{
-  revealLayer.style.setProperty('--mx', '-500px');
-  revealLayer.style.setProperty('--my', '-500px');
-}, {passive:true});
-
-/* hero plays once, then hero2 (close-up → wide) and hero3 (wide → close-up)
-   ping-pong to the end — each ends on the exact frame the other begins */
+/* video order (every hand-off frame-matched at video 1's end frame, "B"):
+   opening spin ends at B → hero interlude on white → the dive lands back at B
+   → hero2-scrub plays DEEPER (B→C), then the SAME clip reversed (C→B), and
+   from B the hero2/hero3 loop ping-pongs to the end. */
+const H2S = 'assets/hero2-scrub.mp4';
 const H2 = 'assets/hero2-loop.mp4';
 const H3 = 'assets/hero3-loop.mp4';
 const VIDEOS = [
-  'assets/hero-scrub.mp4',          // 01 Global Entity Management
-  H2,                               // 02 AI Compliance & KYC
-  H3,                               // 03 Compliance Due Date Reminder
-  H2,                               // 04 CRM & Workflow Automation
-  H3,                               // 05 Document Automation
-  H2,                               // 06 Accounting Status Tracking
-  H3,                               // 07 Agentic AI Infrastructure
-  H2,                               // 08 Secure Client Portal
-  H3,                               // 09 Embedded Payments
-  H2,                               // 10 FinTech · Redclip Pay
-  H3,                               // 11 Offshore Services Marketplace
-  H2,                               // 12 Contact
+  {src:'assets/hero-scrub.mp4'},    // 00 opening spin (no service)
+  {src:H2S},                        // 01 Global Entity Management — dive deeper
+  {src:H2S, rev:true},              // 02 AI Compliance & KYC — pull back to B
+  {src:H2},                         // 03 Compliance Due Date Reminder
+  {src:H3},                         // 04 CRM & Workflow Automation
+  {src:H2},                         // 05 Document Automation
+  {src:H3},                         // 06 Accounting Status Tracking
+  {src:H2},                         // 07 Partners (who we work with)
+  {src:H3},                         // 08 About Us
+  /* Intelligence starts the whole journey over: the very first video plays
+     again (the cut hides behind About's white sheet sliding away), then the
+     chain runs to the loop exactly like the site's opening */
+  {src:'assets/hero-scrub.mp4'},    // 09 AI Secretary · Agentic AI (spin A→B)
+  {src:H2S},                        // 10 Secure Client Portal — dive deeper
+  {src:H2S, rev:true},              // 11 Embedded Payments — pull back to B
+  {src:H2},                         // 12 FinTech · Redclip Pay
+  {src:H3},                         // 13 Offshore Services Marketplace
+  {src:H2},                         // 14 Contact
 ];
 
-function startOfSeg(j){ return INTRO + (j === 0 ? 0 : SEG0 + SEG*(j-1)); }
+function startOfSeg(j){ return j === 0 ? 0 : BASE + SEG*(j-1); }
 
 /* build the <video> stack; scrubbers track their own time — currentTime is
    unreliable mid-seek, and seeks issued while a video is loading get dropped */
 const vidStack = document.getElementById('vidStack');
-const scrubs = VIDEOS.map((src, j)=>{
+const scrubs = VIDEOS.map((def, j)=>{
   const v = document.createElement('video');
   v.muted = true; v.playsInline = true; v.setAttribute('playsinline','');
   v.preload = j < 2 ? 'auto' : 'none';
   if (j === 0) v.poster = 'assets/hero-poster.jpg';
   const srcEl = document.createElement('source');
-  srcEl.src = src; srcEl.type = 'video/mp4';
+  srcEl.src = def.src; srcEl.type = 'video/mp4';
   v.appendChild(srcEl);
   v.style.opacity = j === 0 ? 1 : 0;
   vidStack.appendChild(v);
-  const s = {v, dur:4.04, smooth:0, loaded:j<2};
+  const s = {v, dur:4.04, smooth:0, loaded:j<2, rev:!!def.rev};
   v.addEventListener('loadedmetadata', ()=>{ s.dur = v.duration; });
   if (j < 2) v.load();
   return s;
 });
 function driveScrub(s, p){
   const target = p * Math.max(0, s.dur - 0.05);
-  s.smooth += (target - s.smooth) * 0.22;
+  s.smooth += (target - s.smooth) * 0.35;
   if (Math.abs(target - s.smooth) < 0.01) s.smooth = target;
   /* gate on the video's actual displayed time — a dropped seek retries itself */
   if (s.v.readyState >= 2 && !s.v.seeking && Math.abs(s.smooth - s.v.currentTime) > 0.05){
@@ -1012,9 +1417,9 @@ function driveScrub(s, p){
   }
 }
 
-/* stop for panel i = end of scrub segment i (after the dark landing) */
+/* stop for panel i = end of its scrub segment (segments start after the hero) */
 function unitsForPanel(i){
-  return INTRO + SEG0 + SEG * i;
+  return BASE + SEG * (i + 1);
 }
 
 /* wrapper height: every panel gets its own scrub segment + the sticky screen */
@@ -1050,23 +1455,93 @@ function flyTo(dest, ms){
   flyRAF = requestAnimationFrame(step);
 }
 
-function gotoPanel(i){
-  const dest = scrollYForPanel(i);
-  snapping = true;                       // mute the snap watcher while we fly
-  clearTimeout(snapTimer);
-  clearInterval(settleTimer);
-  const ms = Math.min(950, 380 + Math.abs(dest - window.scrollY) * 0.045);
-  flyTo(dest, ms);
-  setTimeout(()=>{ snapping = false; }, ms + 300);   // failsafe
-}
+/* nav/CTA jumps go through the pager so its page index stays in sync */
+function gotoPanel(i){ goToStop(OPEN_STOPS.length + i); }
 
-/* the user's own scrolling always wins: any wheel/touch kills an in-flight
-   tween immediately so the page never fights the user */
-['wheel','touchstart','keydown'].forEach(ev=>{
-  addEventListener(ev, ()=>{
-    cancelAnimationFrame(flyRAF);
-    snapping = false;
-  }, {passive:true});
+/* ================= PAGER: one gesture = one page =================
+   Stops: brand → +statement → hero → each service → contact. */
+const OPEN_STOPS = [0];               // entry (autoplay + 31 years), then straight into the pages
+function stopU(i){
+  return i < OPEN_STOPS.length ? OPEN_STOPS[i] : unitsForPanel(i - OPEN_STOPS.length);
+}
+const STOP_COUNT = OPEN_STOPS.length + PANEL_COUNT;
+
+let pageIdx = 0, pageLock = false;
+function nearestStop(){
+  const u = units();
+  let best = 0, bd = Infinity;
+  for (let i = 0; i < STOP_COUNT; i++){
+    const d = Math.abs(u - stopU(i));
+    if (d < bd){ bd = d; best = i; }
+  }
+  return best;
+}
+function goToStop(i){
+  i = Math.max(0, Math.min(STOP_COUNT - 1, i));
+  pageIdx = i;
+  const dest = jWrap.offsetTop + stopU(i) * window.innerHeight;
+  snapping = true; pageLock = true;
+  clearTimeout(snapTimer); clearInterval(settleTimer);
+  /* short hops are brisk; the hero→service dive gets room to play out */
+  let ms = Math.max(1100, Math.min(1900, Math.abs(stopU(i) - units()) * 380));
+  /* the opening flight (entry ⇄ first page) is the longest ride on the site —
+     give the dive video time to breathe so it reads as a scene, not a skip */
+  if ((i === 1 && units() < 0.5) || (i === 0 && units() > 2.5)) ms = 2600;
+  flyTo(dest, ms);
+  setTimeout(()=>{ pageLock = false; snapping = false; }, ms + 140);
+}
+function turnPage(dir){
+  if (pageLock) return;
+  goToStop((pageLock ? pageIdx : nearestStop()) + dir);
+}
+/* let genuinely scrollable content (the contact form on short screens) scroll itself */
+function scrollableUnder(el){
+  for (let n = el; n && n !== document.body; n = n.parentElement){
+    if (n.classList && n.classList.contains('panel-first')) continue;
+    if (n.scrollHeight - n.clientHeight > 4 && /auto|scroll/.test(getComputedStyle(n).overflowY)) return n;
+  }
+  return null;
+}
+let lastWheelTs = 0, wheelAccum = 0, wheelTurned = false;
+addEventListener('wheel', e=>{
+  const t = e.target instanceof Element ? e.target : null;
+  if (t && navDrop.contains(t)) return;
+  const sc = t && scrollableUnder(t);
+  if (sc){                                   // still let the pager out at the ends
+    const atTop = sc.scrollTop <= 0, atBot = sc.scrollTop >= sc.scrollHeight - sc.clientHeight - 1;
+    if (!((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBot))) return;
+  }
+  e.preventDefault();
+  /* one gesture = one page. Trackpad gestures open with tiny deltas and end
+     with a momentum tail, so: a >180ms silence starts a NEW gesture; within a
+     gesture the deltas accumulate until they cross the threshold, which turns
+     the page once; everything after that (the tail) is swallowed. */
+  const now = performance.now();
+  if (now - lastWheelTs > 180){ wheelAccum = 0; wheelTurned = false; }
+  lastWheelTs = now;
+  if (pageLock || wheelTurned) return;
+  wheelAccum += e.deltaY;
+  if (Math.abs(wheelAccum) >= 24){
+    wheelTurned = true;
+    turnPage(wheelAccum > 0 ? 1 : -1);
+  }
+}, {passive:false});
+
+let touchY = null;
+addEventListener('touchstart', e=>{ touchY = e.touches[0].clientY; }, {passive:true});
+addEventListener('touchend', e=>{
+  if (touchY === null) return;
+  const dy = e.changedTouches[0].clientY - touchY;
+  touchY = null;
+  if (Math.abs(dy) > 45) turnPage(dy < 0 ? 1 : -1);
+}, {passive:true});
+
+addEventListener('keydown', e=>{
+  const k = e.key;
+  if (['ArrowDown','PageDown',' '].includes(k)){ e.preventDefault(); turnPage(1); }
+  else if (['ArrowUp','PageUp'].includes(k)){ e.preventDefault(); turnPage(-1); }
+  else if (k === 'Home'){ e.preventDefault(); goToStop(0); }
+  else if (k === 'End'){ e.preventDefault(); goToStop(STOP_COUNT - 1); }
 });
 
 /* CTA buttons jump to a panel */
@@ -1079,7 +1554,7 @@ document.addEventListener('click', e=>{
 document.getElementById('logoHome').addEventListener('click', e=>{
   e.preventDefault();
   closeDrop();
-  window.scrollTo({top:0, behavior:'smooth'});
+  goToStop(0);
 });
 
 /* ================= SERVICES DROPDOWN ================= */
@@ -1110,11 +1585,27 @@ svcMenu.innerHTML = `
     <div class="drop-eyebrow">Services</div>
     <div class="drop-grid">
       ${SERVICES.map((s,i)=>
-        `<button role="menuitem" data-goto="${i}"><b>${s.tag}</b><span>${SVC_DESC[i]}</span></button>`
+        `<button role="menuitem" data-goto="${panelOfService(i)}"><b>${s.name}</b><span>${SVC_DESC[i]}</span></button>`
       ).join('')}
-      <button class="full" role="menuitem" data-goto="11"><b>Contact</b><span>Book a free consultation.</span></button>
+      <button class="full" role="menuitem" data-goto="${CONTACT_PANEL}"><b>Contact</b><span>Book a free consultation.</span></button>
     </div>
   </div>`;
+
+/* feature strip: one button per PAGE (services, breathers, contact) in
+   panel order, separated by dots — index in this list = panel index */
+const STRIP = [
+  ...SERVICES.slice(0,6).map((s,i)=>({label:s.name, goto:i})),
+  {label:'Partners', goto:6},
+  {label:'About',    goto:7},
+  ...SERVICES.slice(6).map((s,i)=>({label:s.name, goto:i+8})),
+  {label:'Contact',  goto:CONTACT_PANEL}
+];
+const featStrip = document.getElementById('featStrip');
+featStrip.innerHTML = STRIP
+  .map(o=>`<button data-goto="${o.goto}">${o.label}</button>`)
+  .join('<span class="fdot"></span>');
+const featBtns = [...featStrip.querySelectorAll('button')];
+let stripIdx = -1;
 
 function openDrop(){ navDrop.classList.add('open'); svcBtn.setAttribute('aria-expanded','true'); }
 function closeDrop(){ navDrop.classList.remove('open'); svcBtn.setAttribute('aria-expanded','false'); }
@@ -1129,56 +1620,44 @@ svcMenu.addEventListener('click', closeDrop);
 /* opening statement: split into words for the scroll-driven reveal.
    Words appear one by one as the DNA arrives, then leave one by one
    (first word first) before service 1 pops. */
-const midNote = document.getElementById('midNote');
+const midWords = document.getElementById('midWords');     // entry side block
+const midEyebrow = midWords.querySelector('.mid-eyebrow');
+const sideRed = document.getElementById('sideRed');
+const midBrand = midWords.querySelector('.mid-brand');
+const pageVeil = document.querySelector('.page-veil');
 const noteWords = [];
-midNote.querySelectorAll('[data-words]').forEach(el=>{
+midWords.querySelectorAll('[data-words]').forEach(el=>{
   el.innerHTML = el.textContent.trim().split(/\s+/)
     .map(w=>`<span class="w">${w}</span>`).join(' ');
   noteWords.push(...el.querySelectorAll('.w'));
 });
-const NOTE_IN     = INTRO + 0.02;   // first word appears the moment the page goes white
-const NOTE_INLEN  = 0.5;            // all words in — quick
-const NOTE_OUT    = INTRO + 0.85;   // short hold, then it leaves
-const NOTE_OUTLEN = 0.4;            // gone fast
+
+/* the opening video plays by itself on arrival; once it ends (or the visitor
+   flicks away) it parks on its final frame and the scroll engine owns it */
+let v0auto = true;
+{
+  const v0 = scrubs[0].v;
+  const tryPlay = ()=>{ if (v0auto) v0.play().catch(()=>{}); };
+  if (v0.readyState >= 3) tryPlay();
+  else v0.addEventListener('canplay', tryPlay, {once:true});
+  v0.addEventListener('ended', ()=>{ v0auto = false; });
+}
 
 /* ================= MAIN LOOP ================= */
 function loop(){
   const u = units();
 
-  /* which scrub segment are we in, and how far through it (w = past the landing) */
-  const w = u - INTRO;
+  /* which scrub segment are we in: the entry (video 0, k=0) or a service segment */
   let k, p, segStart;
-  if (w <= SEG0){
+  if (u <= BASE){
     k = 0; segStart = 0;
-    p = Math.min(1, Math.max(0, w / SEG0));
+    p = Math.min(1, Math.max(0, u / BASE));
   } else {
-    k = Math.min(PANEL_COUNT - 1, Math.floor((w - SEG0) / SEG) + 1);
-    segStart = SEG0 + SEG * (k - 1);
-    p = Math.min(1, (w - segStart) / SEG);
+    k = Math.min(PANEL_COUNT, Math.floor((u - BASE) / SEG) + 1);
+    segStart = BASE + SEG * (k - 1);
+    p = Math.min(1, (u - segStart) / SEG);
   }
 
-  /* microscope dive into the centre: text lifts away, the camera plunges
-     straight into the middle of the app — continuous magnification, a white
-     blow-out at the deepest point, and the DNA is revealed beneath */
-  const ip = Math.min(1, Math.max(0, u / INTRO));
-  const zt = Math.min(1, Math.max(0, (ip - 0.14) / 0.83));   // zoom timeline
-  const z  = Math.pow(ZMAX, zt*zt);                          // constant-rate magnification
-  const m  = Math.min(1, zt * 1.5);                          // pull the centre point to screen centre
-  const dx = (window.innerWidth  * 0.5 - P0.x) * m;
-  const dy = (window.innerHeight * 0.5 - P0.y) * m;
-  appFrame.style.transformOrigin = `${(OX*100).toFixed(2)}% ${(OY*100).toFixed(2)}%`;
-  appFrame.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${z.toFixed(4)})`;
-
-  const introOp = ip < 0.85 ? 1 : Math.max(0, 1 - (ip - 0.85) / 0.13);
-  introEl.style.opacity = introOp;
-  introEl.style.visibility = introOp > 0.001 ? 'visible' : 'hidden';
-  introEl.style.pointerEvents = introOp > 0.05 && ip < 0.4 ? 'auto' : 'none';
-  introInner.style.opacity = Math.max(0, 1 - ip * 2.2);
-  introInner.style.transform = `translateY(${(-ip * 10).toFixed(2)}vh)`;
-
-  /* white flash peaks right at the hand-off, then the strand fades in */
-  zoomFlash.style.opacity = (Math.max(0, 1 - Math.abs(ip - 0.88) / 0.12) * 0.95).toFixed(3);
-  vidStack.style.transform = `scale(${(1 + 0.3 * Math.pow(1 - ip, 1.6)).toFixed(4)})`;
   /* sequential chain: video k scrubs; earlier clips park on their last frame
      beneath it, later clips wait on their first frame. Each clip (after the
      first) fades in over the first 0.35 units of its own segment. Only clips
@@ -1188,68 +1667,81 @@ function loop(){
     if (near && !s.loaded){ s.loaded = true; s.v.preload = 'auto'; s.v.load(); }
     s.v.style.display = near ? '' : 'none';
     if (!near) return;
-    if      (j === k) driveScrub(s, p);
-    else if (j < k)   driveScrub(s, 1);
-    else              driveScrub(s, 0);
-    s.v.style.opacity = j === 0 ? 1 : Math.min(1, Math.max(0, (u - startOfSeg(j)) / 0.35));
+    /* video 0 belongs to the entry autoplay; the moment the visitor flicks
+       away (or it ends) it parks on its final frame for good */
+    if (j === 0){
+      if (v0auto && u >= 0.4){ v0auto = false; s.v.pause(); }
+      if (!v0auto){
+        /* hand over where the playhead actually is — otherwise the scrubber's
+           smoothing starts at 0 and visibly seeks backwards on the stop */
+        if (!s.parked){ s.parked = true; s.smooth = s.v.currentTime; }
+        driveScrub(s, 1);
+      }
+      s.v.style.opacity = 1;
+      return;
+    }
+    /* reversed segments scrub backwards, and park on the opposite ends */
+    if      (j === k) driveScrub(s, s.rev ? 1 - p : p);
+    else if (j < k)   driveScrub(s, s.rev ? 0 : 1);
+    else              driveScrub(s, s.rev ? 1 : 0);
+    s.v.style.opacity = Math.min(1, Math.max(0, (u - startOfSeg(j)) / 0.35));
   });
 
-  /* opening statement: word-by-word in, word-by-word out */
+  /* entry side block: brand + 31 years fade up as the auto-playing video
+     nears its end, then leave as the white sweep carries the visitor away */
   {
+    const v0 = scrubs[0].v;
+    const dur = v0.duration || 4;
+    const vp = Math.min(1, v0.currentTime / (dur * 0.92));
+    const reveal = u < 0.4 ? Math.max(0, Math.min(1, (vp - 0.4) / 0.45)) : 1;
+    const out = 1 - Math.max(0, Math.min(1, (u - 0.45) / 0.6));
+    midWords.style.opacity = out.toFixed(3);
+    sideRed.style.opacity = Math.min(1, reveal * 1.6).toFixed(3);
+    midBrand.style.opacity = Math.min(1, reveal * 2).toFixed(3);
+    midEyebrow.style.opacity = Math.min(1, reveal * 3).toFixed(3);
     const N = noteWords.length;
-    const tIn  = (u - NOTE_IN)  / NOTE_INLEN;
-    const tOut = (u - NOTE_OUT) / NOTE_OUTLEN;
-    /* container (and its scrim) breathes in before the first word,
-       and out with the last leaving word */
-    const envIn  = Math.max(0, Math.min(1, (u - (NOTE_IN - 0.2)) / 0.3));
-    const envOut = 1 - Math.max(0, Math.min(1, (u - (NOTE_OUT + NOTE_OUTLEN - 0.25)) / 0.3));
-    midNote.style.opacity = (envIn * envOut).toFixed(3);
-    if (envIn > 0 && envOut > 0){
-      for (let i = 0; i < N; i++){
-        const a = Math.max(0, Math.min(1, tIn  * N - i));   // reveal progress
-        const b = Math.max(0, Math.min(1, tOut * N - i));   // exit progress
-        noteWords[i].style.opacity = (a * (1 - b)).toFixed(3);
-      }
+    for (let i = 0; i < N; i++){
+      noteWords[i].style.opacity = Math.max(0, Math.min(1, reveal * (N + 2) - i)).toFixed(3);
     }
+    document.body.classList.toggle('brand-center', u < 1.0);
   }
+
+  /* the veil fades in over the dive so the first service reads on white */
+  pageVeil.style.opacity = Math.max(0, Math.min(1, (u - 1.4) / 0.9)).toFixed(3);
 
   /* each panel pops on its scene's end frame, then fades off into the next scene */
   panels.forEach((el, i)=>{
     const stop = unitsForPanel(i);
-    el.classList.toggle('show', u > stop - (i === 0 ? SEG0 : SEG) * 0.2);
+    el.classList.toggle('show', u > stop - SEG * 0.3);
     el.classList.toggle('bye',  u > stop + 0.45);
   });
+
+  /* feature strip: rides under the header through the service pages and
+     highlights the page in view; hidden on the entry, hero and dive */
+  document.body.classList.toggle('strip-on', u > BASE + SEG - 0.6);
+  {
+    const act = Math.max(0, Math.min(PANEL_COUNT - 1, Math.round((u - BASE) / SEG) - 1));
+    if (act !== stripIdx){
+      stripIdx = act;
+      featBtns.forEach((b, i)=>b.classList.toggle('on', i === act));
+      const b = featBtns[act];
+      if (featStrip.scrollWidth > featStrip.clientWidth + 4){
+        featStrip.scrollTo({left: b.offsetLeft - featStrip.clientWidth/2 + b.offsetWidth/2, behavior:'smooth'});
+      }
+    }
+  }
 
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
 
-/* ================= SNAP : settle on the nearest service ================= */
-window.addEventListener('scroll', ()=>{
-  if (snapping) return;
-  clearTimeout(snapTimer);
-  snapTimer = setTimeout(()=>{
-    if (snapping) return;
-    const u = units();
-    /* nearest stop; mid-scrub (far from any stop) stays free */
-    let best = 0, bd = Infinity;
-    for (let i = 0; i < PANEL_COUNT; i++){
-      const d = Math.abs(u - unitsForPanel(i));
-      if (d < bd){ bd = d; best = i; }
-    }
-    if (bd > 0.55) return;
-    if (Math.abs(scrollYForPanel(best) - window.scrollY) > 6) gotoPanel(best);
-  }, 140);
-}, {passive:true});
+/* (idle snapping removed — the pager owns navigation now) */
 
-/* keep the same journey position when the viewport height changes
-   (mobile URL bars, window resizes) — otherwise u jumps to a random segment */
 let lastVH = window.innerHeight;
 window.addEventListener('resize', ()=>{
   const u = (window.scrollY - jWrap.offsetTop) / lastVH;
   lastVH = window.innerHeight;
   sizeWrap();
-  measureIntro();
   window.scrollTo({top: jWrap.offsetTop + u * lastVH, behavior:'auto'});
 });
 
@@ -1257,9 +1749,9 @@ window.addEventListener('resize', ()=>{
 document.getElementById('leadForm').addEventListener('submit', e=>{
   e.preventDefault();
   const f = new FormData(e.target);
-  const subject = encodeURIComponent("Consultation Request — " + (f.get('service') || "REDclip Platform"));
+  const subject = encodeURIComponent("Enquiry — " + (f.get('company') || f.get('name') || "REDclip Platform"));
   const body = encodeURIComponent(
-    `Name: ${f.get('name')}\nEmail: ${f.get('email')}\nCompany: ${f.get('company')||"-"}\nInterested in: ${f.get('service')||"-"}\n\n${f.get('message')||""}`
+    `Name: ${f.get('name')}\nBusiness email: ${f.get('email')}\nTelephone: ${f.get('phone')||"-"}\nCompany: ${f.get('company')||"-"}\nCountry / region: ${f.get('country')||"-"}\nEntities managed: ${f.get('entities')||"-"}\n\nCurrent challenges:\n${f.get('message')||"-"}`
   );
   window.location.href = `mailto:ceo@redclip.ai?subject=${subject}&body=${body}`;
 });

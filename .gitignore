@@ -11,16 +11,18 @@ herovideo2.mp4
 hero2.mp4
 hero3.mp4
 reclip2new.mp4
+redclip2.mp4
 redclipsecond.mp4
 dashboard.jpeg
 informatiopn.jpeg
 ChatGPT Image*.png
+REDclip-brand-assets-*.png
 WhatsApp Image*.jpeg
 
 # ---- superseded / unused build artefacts ----
+# (assets/hero2-scrub.mp4 is BACK IN USE — segments 1–2 of the journey)
 3d-version-backup.html
 video-version-backup.html
 assets/three.module.js
-assets/hero2-scrub.mp4
 assets/reclip2-scrub.mp4
 assets/app-dashboard.jpeg

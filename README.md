@@ -7,8 +7,8 @@ plain HTML/CSS/JS that any static host can serve.
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | The one-pager: hero → scroll-scrubbed DNA journey → 11 services → contact |
-| `login.html` | Client / Agent login chooser (switches theme in place, then hands off to the portals) |
+| `index.html` | The one-pager: DNA entry → scroll-scrubbed journey → 11 services + Partners/About breathers → contact |
+| `login.html` | Portal chooser — Client / Agent login buttons linking to the apps |
 
 Portals the login page hands off to:
 - Client → `https://app.redclip.com`
@@ -18,9 +18,10 @@ Portals the login page hands off to:
 
 Everything the site serves lives in `assets/`:
 
-- `hero-scrub.mp4`, `hero2-loop.mp4`, `hero3-loop.mp4` — DNA clips, re-encoded all-intra
-  (every frame a keyframe) so scroll-scrubbing is smooth. Don't re-compress without
-  `-g 1` or scrubbing will stutter.
+- `hero-scrub.mp4`, `hero2-scrub.mp4`, `hero2-loop.mp4`, `hero3-loop.mp4` — DNA clips,
+  re-encoded all-intra (every frame a keyframe) so scroll-scrubbing is smooth — including
+  reverse playback (`hero2-scrub` plays forward for service 1, then reversed for
+  service 2). Don't re-compress without `-g 1` or scrubbing will stutter.
 - `hero-poster.jpg` — first-frame poster
 - `app-*.png` — product screenshots (transparent background)
 - `reveal.jpg` — the collage revealed by the cursor spotlight on the hero
