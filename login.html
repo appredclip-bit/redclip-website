@@ -41,28 +41,37 @@ body::before{
 
 .wrap{
   position:relative;z-index:1;
-  width:100%;max-width:400px;
+  width:100%;max-width:880px;
   display:flex;flex-direction:column;align-items:center;text-align:center;
 }
 .lockup{height:74px;width:auto;display:block;margin-bottom:30px;}
 h1{font-size:27px;font-weight:700;letter-spacing:-.03em;}
 .sub{margin-top:9px;color:var(--grey);font-size:14.5px;line-height:1.55;}
 
-.choices{margin-top:30px;width:100%;display:flex;flex-direction:column;gap:14px;}
+/* client on the left, agent on the right */
+.choices{
+  margin-top:38px;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;gap:22px;
+}
 .portal{
-  display:flex;align-items:center;gap:14px;text-align:left;
-  padding:17px 20px;border-radius:14px;text-decoration:none;
+  display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
+  padding:40px 28px 34px;border-radius:20px;text-decoration:none;
   transition:transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
 }
-.portal b{display:block;font-size:15.5px;font-weight:700;letter-spacing:-.01em;}
-.portal span{display:block;margin-top:2px;font-size:12.5px;font-weight:500;opacity:.72;}
-.portal .arrow{margin-left:auto;font-size:20px;font-weight:700;opacity:.7;transition:transform .18s ease;}
-.portal:hover .arrow{transform:translateX(4px);}
+.portal b{display:block;font-size:23px;font-weight:700;letter-spacing:-.02em;}
+.portal span{display:block;margin-top:5px;font-size:14px;font-weight:500;opacity:.75;}
+.portal .arrow{font-size:26px;font-weight:700;line-height:1;opacity:.75;transition:transform .18s ease;}
+.portal:hover .arrow{transform:translateX(5px);}
 .p-ic{
-  flex:0 0 40px;height:40px;border-radius:11px;
+  flex:0 0 62px;width:62px;height:62px;border-radius:18px;
   display:flex;align-items:center;justify-content:center;
 }
-.p-ic svg{width:20px;height:20px;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.p-ic svg{width:30px;height:30px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+@media (max-width:700px){
+  .choices{grid-template-columns:1fr;gap:16px;}
+  .portal{padding:28px 22px 24px;}
+  .portal b{font-size:20px;}
+}
 
 .portal.client{
   background:linear-gradient(135deg,#ff4b60 0%,var(--red) 55%,var(--red-dark) 100%);
@@ -112,6 +121,8 @@ h1{font-size:27px;font-weight:700;letter-spacing:-.03em;}
       <span><b>Agent Login</b><span>go.redclip.com</span></span>
       <span class="arrow">›</span>
     </a>
+    <!-- client left, agent right -->
+
   </div>
 
   <a class="back" href="index.html">← Back to redclip.com</a>

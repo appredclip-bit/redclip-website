@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>REDclip 小红夹 | All-in-One Global Business Solutions</title>
-<meta name="description" content="Manage global entities, automate compliance, streamline corporate workflows and access embedded financial services through one connected platform.">
+<meta name="description" content="Manage global entities, statutory records, directors, shareholders and corporate documents securely through one entity management platform.">
+<meta name="keywords" content="global entity management, entity management software, corporate records management, legal entity management, AI compliance software, KYC software, KYB solutions, automated compliance, customer due diligence, compliance deadline tracking, filing deadline reminders, statutory compliance calendar, compliance reminder software, CRM workflow automation, client onboarding software, business process automation, sales pipeline management, professional services CRM, document automation software, corporate document generation, legal document automation, automated business documents, accounting status tracking, accounting workflow software, bookkeeping task management, financial reporting tracker, AI secretary, AI virtual secretary, agentic AI infrastructure, enterprise AI agents, AI workflow automation, secure client portal, statutory records portal, corporate document portal, client document management, white-label client portal, embedded payments, integrated payment solutions, business payment platform, automated payment reconciliation, client portal payments, Redclip Pay, cross-border payments, digital payment platform, business payment solutions, FinTech solutions, offshore services marketplace, offshore company formation, global corporate services, international company registration, cross-border corporate services">
 <link rel="icon" type="image/png" href="assets/brand-icon.png">
 <link rel="apple-touch-icon" href="assets/brand-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -471,6 +472,15 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
   display:grid;grid-template-columns:1fr 1fr;
   column-gap:clamp(14px,1.6vw,26px);row-gap:clamp(5px,.8vh,9px);
 }
+/* wide centred pages fit the full list in three compact columns */
+.p-list.cols3{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  column-gap:clamp(14px,1.8vw,30px);row-gap:clamp(4px,.7vh,8px);
+  text-align:left;margin-top:clamp(14px,2vh,22px);
+}
+.p-list.cols3 li{font-size:clamp(11px,.85vw,12.5px);line-height:1.4;}
+.p-list.cols3 .clip{flex:0 0 13px;margin-top:1px;}
+.p-list.cols3 .clip svg{width:13px;height:13px;}
 .p-list li{
   display:flex;gap:9px;align-items:flex-start;
   font-size:clamp(11.5px,.95vw,13.5px);line-height:1.45;color:#2b2b31;font-weight:400;
@@ -590,20 +600,32 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
 .lay-center .p-tag{margin-bottom:10px;}
 .lay-center .p-title{font-size:clamp(28px,3.4vw,50px);}
 .lay-center .p-sub{margin:12px auto 0;max-width:56ch;}
-.pill-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px;}
+.pill-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:13px;}
 .pill{
   display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border-radius:999px;
   background:#fff;box-shadow:0 4px 16px rgba(17,17,20,.09);
   font-size:12.5px;font-weight:600;color:#2b2b31;
 }
 .pill i{width:8px;height:8px;border-radius:50%;}
-.lay-center .p-cta{margin-top:18px;justify-content:center;}
-.lay-center .p-body{margin-top:clamp(16px,3vh,28px);width:100%;display:flex;justify-content:center;}
+.lay-center .p-cta{margin-top:16px;justify-content:center;}
+.lay-center .p-body{margin-top:clamp(14px,2.4vh,24px);width:100%;}
+/* dense half: the full bullet list beside the screenshot */
+.c-row{
+  display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
+  gap:clamp(20px,2.6vw,40px);align-items:center;text-align:left;
+}
+.p-list.c-side{margin-top:0;display:flex;flex-direction:column;gap:clamp(5px,.8vh,9px);}
+.p-list.c-side li{font-size:clamp(11.5px,.92vw,13px);line-height:1.45;}
+.p-list.c-side .clip{flex:0 0 14px;margin-top:1px;}
+.p-list.c-side .clip svg{width:14px;height:14px;}
+.lay-center .p-note{margin:10px auto 0;text-align:center;max-width:78ch;font-size:11.5px;}
+/* pages carrying a legal note give the screenshot a little back */
+.lay-center.has-note .c-shot img{max-height:30vh;}
 .c-shot{
   max-width:min(860px,94%);border-radius:14px;overflow:hidden;
   box-shadow:0 30px 70px rgba(17,17,20,.18);background:#fff;
 }
-.c-shot img{display:block;width:100%;max-height:48vh;object-fit:cover;object-position:center top;}
+.c-shot img{display:block;width:100%;max-height:36vh;object-fit:cover;object-position:center top;}
 /* tablet-mockup shots carry their own frame — no card chrome around them */
 .c-shot.tab{background:none;box-shadow:none;border-radius:0;overflow:visible;}
 .c-shot.tab img{width:auto;max-width:100%;max-height:50vh;object-fit:contain;margin:0 auto;
@@ -648,6 +670,16 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
 .f-toast b{display:block;font-size:13.5px;font-weight:700;color:var(--ink);margin-top:1px;}
 .f-toast i{display:block;font-style:normal;font-size:10.5px;color:#b3b3ba;margin-top:1px;}
 @keyframes bob{from{transform:translateY(0);}to{transform:translateY(-9px);}}
+/* secondary heading blocks from the write-up */
+.p-extra{margin-top:clamp(10px,1.6vh,17px);}
+.p-extra h3{
+  font-size:clamp(15px,1.35vw,18px);font-weight:700;letter-spacing:-.02em;color:var(--ink);
+}
+.p-extra p{
+  margin-top:5px;color:var(--grey);font-size:clamp(12.5px,1.05vw,14.5px);
+  line-height:1.6;font-weight:400;max-width:58ch;
+}
+.lay-center .p-extra p{margin-left:auto;margin-right:auto;}
 .p-list.mini{margin-top:16px;gap:7px;}
 .p-list.mini li{font-size:clamp(12px,.95vw,13.5px);}
 
@@ -852,6 +884,16 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
   border-color:var(--red);box-shadow:0 0 0 3px rgba(237,27,52,.10);
 }
 .lead-form .full{grid-column:1/-1;}
+/* labelled fields with helper text, per the write-up */
+.lead-form label{
+  display:flex;flex-direction:column;gap:5px;
+  font-size:12.5px;font-weight:600;color:var(--ink);letter-spacing:-.005em;
+}
+.lead-form label i{font-style:normal;font-size:11px;font-weight:400;color:#9a9aa2;line-height:1.4;}
+.lead-form label .opt{
+  font-weight:500;color:#9a9aa2;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+}
+.lead-form label input,.lead-form label select,.lead-form label textarea{margin-top:1px;}
 .lead-form textarea{resize:vertical;min-height:84px;}
 .lead-form button{grid-column:1/-1;justify-content:center;}
 .form-fine{font-size:11px !important;line-height:1.5;color:rgba(17,17,20,.45) !important;margin-top:-2px;}
@@ -1040,8 +1082,8 @@ const SERVICES = [
       "Route documents to clients, teams and service providers for review and approval",
       "Support electronic signatures and digital approval workflows",
       "Track preparation, submission, filing and completion stages",
-      "Update entity records once government filings are completed",
-      "Maintain secure document versions, transaction records and audit histories",
+      "Update entity records with the latest information after government filings are completed",
+      "Maintain secure document versions, transaction records and complete audit histories",
       "Reduce repetitive data entry and document preparation errors"
     ],
     cta:"Explore Document Automation"
@@ -1069,7 +1111,8 @@ const SERVICES = [
     name:"Intelligence", layout:'float', shot:'assets/app-ai.png', tab:true,
     float:{statLabel:'AI Secretary', statValue:'Draft ready', toastTag:'Documents', toastMsg:'3 prepared for review'},
     cn:"智能秘书", icon:'cpu', benefit:{lead:'Simply tell it what you need.', text:'“Prepare a transfer of shares in Entity XXXX from shareholder XXX Wong to XXX Tan.” The AI Secretary finds the workflow, creates the task list and prepares the documents for authorised human review and approval.'}, tag:"AI Secretary · Agentic AI",
-    title:"Intelligence That Works for You.",
+    title:"AI Secretary: Intelligence That Works for You.",
+    extra:[{h:'Simply Tell Your AI Secretary What You Need', p:'Example instruction: “Prepare a transfer of shares in Entity XXXX from shareholder XXX Wong to XXX Tan.” The AI Secretary identifies the required workflow, retrieves relevant entity information, creates the task list and prepares the documents for authorised human review and approval.'}],
     sub:"Build an AI-ready operation with an intelligent secretary that understands instructions, supports your team and coordinates routine work, while people remain in control of important decisions.",
     bullets:[
       "Access a built-in AI agent across the platform",
@@ -1093,7 +1136,8 @@ const SERVICES = [
     pills:[['#16a34a','Records'],['#f59e0b','Documents'],['#ED1B34','Chat']],
     cn:"客户专属门户", icon:'usercheck', benefit:{lead:'Less administration. Better client service.', text:'Reduce repetitive document requests, email follow-ups and status enquiries while giving clients greater visibility and control.'}, tag:"Secure Client Portal",
     title:"Their Entities. Their Records. Your Time Back.",
-    sub:"Give every client a secure digital workspace for their own entity records. Clients find information, retrieve documents and submit requests independently.",
+    sub:"Give every client a secure digital workspace for their own entity records. Clients can find information, retrieve documents and submit requests independently, reducing routine administrative work for your team.",
+    extra:[{h:'Less Administration. Better Client Service.', p:'Reduce repetitive document requests, email follow-ups and status enquiries while giving clients greater visibility and control.'}],
     bullets:[
       "Give authorised clients secure, anytime access to their own entities",
       "Share statutory registers, corporate records and important documents",
@@ -1133,6 +1177,10 @@ const SERVICES = [
     float:{statLabel:'Collections', statValue:'On schedule', toastTag:'Reconciliation', toastMsg:'Matched automatically'},
     cn:"金融支付科技", icon:'banknote', benefit:{lead:'No finance department? No problem.', text:'Payment collection, reconciliation, document generation and service delivery in one connected journey, from order to completion.'}, tag:"FinTech · Redclip Pay",
     title:"Payments Made Effortless.",
+    extra:[
+      {h:'No Finance Department? No Problem.', p:'Redclip Pay helps automate everyday payment administration, giving your team greater visibility and control.'},
+      {h:'From Order to Completion. One Connected Journey.', p:'Connect payment collection with reconciliation, document generation, task creation and service delivery, without disconnected systems.'}
+    ],
     sub:"Simplify digital and cross-border payment management with one connected solution, from customer collection to business settlement.",
     bullets:[
       "Accept eligible digital and cross-border payments",
@@ -1152,6 +1200,7 @@ const SERVICES = [
     pills:[['#16a34a','Compare'],['#f59e0b','Order'],['#ED1B34','Track']],
     cn:"离岸服务市场", icon:'globe', benefit:{lead:'Go global without going it alone.', text:'Serve clients across more jurisdictions through a connected network of local providers, without acting as the registered filing agent in each location.'}, tag:"Offshore Services Marketplace",
     title:"Every Jurisdiction. One Marketplace.",
+    extra:[{h:'Go Global Without Going It Alone.', p:'Serve clients across more jurisdictions through a connected network of local providers, without personally acting as the registered filing agent in each location.'}],
     sub:"Access company formation, administration and transactional corporate services across international jurisdictions, even in markets outside your existing network or expertise.",
     bullets:[
       "Explore corporate services by country or jurisdiction",
@@ -1206,22 +1255,37 @@ SERVICES.forEach((s,i)=>{
           <a class="cta2" href="#" data-goto="${CONTACT_PANEL}">${s.cta2 || 'Book a Demo'}</a>
         </div>`;
   const shotImg = `<img src="${s.shot}" alt="${s.tag} inside the REDclip platform" loading="lazy">`;
+  /* the write-up's secondary headings (e.g. "No Finance Department? No Problem.") */
+  const extra = (s.extra||[]).map(e=>
+    `<div class="p-extra"><h3>${e.h}</h3><p>${e.p}</p></div>`).join('');
+  /* every bullet from the write-up shows on every page; the column count
+     just adapts to how many there are so the page still fits one screen */
+  const list = (cols)=>`<ul class="p-list ${cols}">${
+    s.bullets.map(b=>`<li><span class="clip">${CLIP_SVG}</span>${b}</li>`).join("")}</ul>`;
+  const note = s.note ? `<p class="p-note">${s.note}</p>` : "";
 
   if (s.layout === 'center'){
     /* concept 1: everything centred, the app takes the stage below */
     html += `
-  <section class="panel panel-first lay-center" data-panel="${panelOfService(i)}">
+  <section class="panel panel-first lay-center${s.note?' has-note':''}" data-panel="${panelOfService(i)}">
     <div class="panel-inner">
       <div class="p-tag">${s.tag} / ${num}</div>
       <div class="p-head">
         <h2 class="p-title">${s.title}</h2>
         <p class="p-sub">${s.sub}</p>
+        ${extra}
         <div class="pill-row">
           ${s.pills.map(p=>`<span class="pill"><i style="background:${p[0]}"></i>${p[1]}</span>`).join('')}
         </div>
-        ${ctas}
       </div>
-      <div class="p-body"><div class="c-shot${s.tab?' tab':''}">${shotImg}</div></div>
+      <div class="p-body">
+        <div class="c-row">
+          ${list('c-side')}
+          <div class="c-shot${s.tab?' tab':''}">${shotImg}</div>
+        </div>
+        ${ctas}
+        ${note}
+      </div>
     </div>
   </section>`;
 
@@ -1234,10 +1298,10 @@ SERVICES.forEach((s,i)=>{
         <div class="p-tag">${num} · ${s.tag}</div>
         <h2 class="p-title">${s.title}</h2>
         <p class="p-sub">${s.sub}</p>
-        <ul class="p-list mini">
-          ${s.bullets.slice(0,5).map(b=>`<li><span class="clip">${CLIP_SVG}</span>${b}</li>`).join("")}
-        </ul>
+        ${list(s.bullets.length > 6 ? 'mini cols' : 'mini')}
+        ${extra}
         ${ctas}
+        ${note}
       </div>
       <div class="p-body">
         <div class="f-wrap">
@@ -1261,7 +1325,10 @@ SERVICES.forEach((s,i)=>{
       <div class="p-head">
         <h2 class="p-title">${s.title}</h2>
         <p class="p-sub">${s.sub}</p>
+        ${list(s.bullets.length > 6 ? 'mini cols' : 'mini')}
+        ${extra}
         <div class="p-cta"><a class="cta2" href="#" data-goto="${CONTACT_PANEL}">${s.cta2 || 'Book a Demo'}</a></div>
+        ${note}
       </div>
       <div class="p-body">
         <div class="c-shot ed-shot${s.tab?' tab':''}">${shotImg}</div>
@@ -1347,6 +1414,10 @@ html += `
     <div class="contact-info">
       <h2>Everything Your Global Business Needs. <span class="red">Connected.</span></h2>
       <p class="lead">Manage entities, automate compliance and KYC, generate documents, coordinate accounting workflows, serve clients and collect payments through one connected ecosystem. From incorporation to ongoing administration, every workflow, record and transaction stays connected, giving your team greater visibility, control and efficiency.</p>
+      <div class="p-cta contact-cta">
+        <a class="btn btn-red" href="mailto:ceo@redclip.ai?subject=Book%20a%20Free%20Consultation">Book a Free Consultation</a>
+        <a class="cta2" href="mailto:ceo@redclip.ai?subject=Request%20a%20Platform%20Demo">Request a Platform Demo</a>
+      </div>
       <div class="contact-list">
         <a href="tel:+6562288766"><span class="ci"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.9 15.9 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .57 3.6 1 1 0 0 1-.25 1z"/></svg></span>+65 6228 8766 &nbsp;·&nbsp; +65 8676 7676 (WhatsApp)</a>
         <a href="mailto:ceo@redclip.ai"><span class="ci"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></svg></span>ceo@redclip.ai</a>
@@ -1359,19 +1430,43 @@ html += `
       <h3>Discover the Right Solution for Your Business</h3>
       <p>Tell us about your operations, target jurisdictions and current challenges. Our team will help you identify the right combination of solutions for your business.</p>
       <form class="lead-form" id="leadForm">
-        <input type="text" name="name" placeholder="Full name" required>
-        <input type="email" name="email" placeholder="Business email" required>
-        <input type="tel" name="phone" placeholder="Business telephone (incl. country code)">
-        <input type="text" name="company" placeholder="Company name">
-        <input type="text" name="country" placeholder="Country or region">
-        <select name="entities">
-          <option value="">Number of entities managed</option>
-          <option>0–100</option>
-          <option>101–500</option>
-          <option>501–1,000</option>
-          <option>More than 1,000</option>
-        </select>
-        <textarea name="message" class="full" placeholder="Current challenges (optional): operational, compliance or technology challenges you would like to address…"></textarea>
+        <label>Name<input type="text" name="name" required><i>Enter your full name.</i></label>
+        <label>Business Email<input type="email" name="email" required><i>Enter your business email address.</i></label>
+        <label>Business Telephone<input type="tel" name="phone"><i>Include your country code.</i></label>
+        <label>Company Name<input type="text" name="company"><i>Enter your company or organisation name.</i></label>
+        <label>Country or Region
+          <select name="country">
+            <option value="">Select…</option>
+            <option>Singapore</option>
+            <option>Malaysia</option>
+            <option>Hong Kong SAR</option>
+            <option>China</option>
+            <option>Indonesia</option>
+            <option>Vietnam</option>
+            <option>Thailand</option>
+            <option>Philippines</option>
+            <option>India</option>
+            <option>United Arab Emirates</option>
+            <option>United Kingdom</option>
+            <option>United States</option>
+            <option>Australia</option>
+            <option>Other</option>
+          </select>
+          <i>Select your primary business location.</i>
+        </label>
+        <label>Number of Entities Managed
+          <select name="entities">
+            <option value="">Select…</option>
+            <option>0–100</option>
+            <option>101–500</option>
+            <option>501–1,000</option>
+            <option>More than 1,000</option>
+          </select>
+        </label>
+        <label class="full">Current Challenges <span class="opt">Optional</span>
+          <textarea name="message"></textarea>
+          <i>Tell us about any operational, compliance or technology challenges you would like to address.</i>
+        </label>
         <button type="submit" class="btn btn-red">Find My Solution</button>
         <p class="form-fine full">By submitting this form, you agree that our team may contact you regarding your enquiry. Your information will be handled in accordance with our Privacy Policy.</p>
       </form>
@@ -1788,7 +1883,7 @@ document.getElementById('leadForm').addEventListener('submit', e=>{
   const f = new FormData(e.target);
   const subject = encodeURIComponent("Enquiry: " + (f.get('company') || f.get('name') || "REDclip Platform"));
   const body = encodeURIComponent(
-    `Name: ${f.get('name')}\nBusiness email: ${f.get('email')}\nTelephone: ${f.get('phone')||"-"}\nCompany: ${f.get('company')||"-"}\nCountry / region: ${f.get('country')||"-"}\nEntities managed: ${f.get('entities')||"-"}\n\nCurrent challenges:\n${f.get('message')||"-"}`
+    `Name: ${f.get('name')}\nBusiness Email: ${f.get('email')}\nBusiness Telephone: ${f.get('phone')||"-"}\nCompany Name: ${f.get('company')||"-"}\nCountry or Region: ${f.get('country')||"-"}\nNumber of Entities Managed: ${f.get('entities')||"-"}\n\nCurrent Challenges:\n${f.get('message')||"-"}`
   );
   window.location.href = `mailto:ceo@redclip.ai?subject=${subject}&body=${body}`;
 });
