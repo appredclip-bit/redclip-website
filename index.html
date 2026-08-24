@@ -604,6 +604,12 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
   box-shadow:0 30px 70px rgba(17,17,20,.18);background:#fff;
 }
 .c-shot img{display:block;width:100%;max-height:48vh;object-fit:cover;object-position:center top;}
+/* tablet-mockup shots carry their own frame — no card chrome around them */
+.c-shot.tab{background:none;box-shadow:none;border-radius:0;overflow:visible;}
+.c-shot.tab img{width:auto;max-width:100%;max-height:50vh;object-fit:contain;margin:0 auto;
+  filter:drop-shadow(0 24px 48px rgba(17,17,20,.22));}
+.f-shot.tab{background:none;box-shadow:none;border-radius:0;overflow:visible;}
+.f-shot.tab img{filter:drop-shadow(0 24px 48px rgba(17,17,20,.22));}
 
 /* concept 2 — lay-float: tilted app shot with floating status cards */
 .lay-float .panel-inner{align-items:center;}
@@ -711,6 +717,7 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
   position:relative;z-index:2;width:100%;max-width:980px;margin:0 auto;text-align:center;
 }
 .panel-break .p-tag{margin-bottom:6px;}
+.panel-break .p-tag::before{display:none;}   /* centred eyebrow, no rule */
 .b-title{font-size:clamp(26px,3vw,44px);font-weight:700;line-height:1.1;letter-spacing:-.028em;margin-top:6px;}
 .b-sub{margin:14px auto 0;max-width:56ch;color:var(--grey);font-size:clamp(14px,1.2vw,16.5px);line-height:1.65;font-weight:400;}
 .logo-row{
@@ -726,6 +733,21 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
   color:rgba(17,17,20,.32);font-size:11.5px;font-weight:600;
   letter-spacing:.14em;text-transform:uppercase;
 }
+/* endless logo marquee: the client-company logos drift by, edges feathered */
+.marq{
+  width:100%;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+}
+.marq-track{
+  display:flex;align-items:center;width:max-content;
+  animation:marq 44s linear infinite;will-change:transform;
+}
+.marq-track img{
+  height:clamp(30px,4vw,46px);width:auto;display:block;
+  margin-right:clamp(36px,5vw,68px);
+}
+@keyframes marq{to{transform:translateX(-50%);}}
 .stat-row{
   margin-top:clamp(26px,4.5vh,44px);
   display:flex;justify-content:center;gap:clamp(30px,5.5vw,80px);flex-wrap:wrap;
@@ -897,7 +919,7 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
     <a class="nav-item hide-sm" href="#" data-goto="13">Contact</a>
   </div>
   <div class="nav-right">
-    <a class="nav-cta" href="login.html" title="Log in — client or agent">Login</a>
+    <a class="nav-cta" href="login.html" title="Log in: client or agent">Login</a>
   </div>
 </nav>
 
@@ -936,7 +958,7 @@ const SERVICES = [
     pills:[['#16a34a','Accurate'],['#f59e0b','Current'],['#ED1B34','Audit-ready']],
     cn:"全球企业管理", icon:'building', shot:'assets/app-entity.png', benefit:{lead:'One source of truth.', text:'Every director, shareholder and filing lives in a single, audit-ready record.'}, tag:"Global Entity Management",
     title:"Every Entity. One Place.",
-    sub:"Gain complete visibility and control over your global companies, corporate records and statutory obligations — all through one secure platform.",
+    sub:"Gain complete visibility and control over your global companies, corporate records and statutory obligations, all through one secure platform.",
     bullets:[
       "Centralise corporate records, statutory documents and transaction histories",
       "Maintain digital registers of directors, shareholders and beneficial owners",
@@ -948,7 +970,8 @@ const SERVICES = [
     cta:"Manage Your Entities"
   },
   {
-    name:"Verify",
+    name:"Verify", layout:'edit', shot:'assets/app-kyc.png', tab:true,
+    edCaption:'Every check, scored and logged.',
     cn:"智能合规审核", icon:'shield', benefit:{lead:'Faster onboarding.', text:'AI checks documents and flags risk in minutes, not days.'}, tag:"AI Compliance & KYC",
     title:"Know Every Customer. Assess Every Risk.",
     sub:"Improve onboarding efficiency and risk visibility with intelligent, AI-assisted compliance workflows.",
@@ -1004,10 +1027,11 @@ const SERVICES = [
     cta:"Automate Your Client Workflows"
   },
   {
-    name:"Documents",
+    name:"Documents", layout:'center', shot:'assets/app-docgen.png', tab:true,
+    pills:[['#16a34a','Generate'],['#f59e0b','Approve'],['#ED1B34','e-Sign']],
     cn:"企业文件生成", icon:'file', benefit:{lead:'Minutes, not hours.', text:'Resolutions and forms generated straight from live entity data.'}, tag:"Document Automation",
     title:"Every Document. Always Up to Date.",
-    sub:"Turn verified client and entity data into accurate, consistent and professional corporate documents — faster.",
+    sub:"Turn verified client and entity data into accurate, consistent and professional corporate documents, faster.",
     bullets:[
       "Create transactions and task lists automatically upon payment",
       "Generate resolutions, statutory forms, agreements and supporting documents",
@@ -1042,10 +1066,11 @@ const SERVICES = [
     cta:"Improve Accounting Visibility"
   },
   {
-    name:"Intelligence",
+    name:"Intelligence", layout:'float', shot:'assets/app-ai.png', tab:true,
+    float:{statLabel:'AI Secretary', statValue:'Draft ready', toastTag:'Documents', toastMsg:'3 prepared for review'},
     cn:"智能秘书", icon:'cpu', benefit:{lead:'Simply tell it what you need.', text:'“Prepare a transfer of shares in Entity XXXX from shareholder XXX Wong to XXX Tan.” The AI Secretary finds the workflow, creates the task list and prepares the documents for authorised human review and approval.'}, tag:"AI Secretary · Agentic AI",
     title:"Intelligence That Works for You.",
-    sub:"Build an AI-ready operation with an intelligent secretary that understands instructions, supports your team and coordinates routine work — while people remain in control of important decisions.",
+    sub:"Build an AI-ready operation with an intelligent secretary that understands instructions, supports your team and coordinates routine work, while people remain in control of important decisions.",
     bullets:[
       "Access a built-in AI agent across the platform",
       "Automate repetitive administrative and operational activities",
@@ -1064,10 +1089,11 @@ const SERVICES = [
     cta2:"Build Your AI Workforce"
   },
   {
-    name:"Portal",
+    name:"Portal", layout:'center', shot:'assets/app-portal.png', tab:true,
+    pills:[['#16a34a','Records'],['#f59e0b','Documents'],['#ED1B34','Chat']],
     cn:"客户专属门户", icon:'usercheck', benefit:{lead:'Less administration. Better client service.', text:'Reduce repetitive document requests, email follow-ups and status enquiries while giving clients greater visibility and control.'}, tag:"Secure Client Portal",
     title:"Their Entities. Their Records. Your Time Back.",
-    sub:"Give every client a secure digital workspace for their own entity records — clients find information, retrieve documents and submit requests independently.",
+    sub:"Give every client a secure digital workspace for their own entity records. Clients find information, retrieve documents and submit requests independently.",
     bullets:[
       "Give authorised clients secure, anytime access to their own entities",
       "Share statutory registers, corporate records and important documents",
@@ -1084,10 +1110,11 @@ const SERVICES = [
     cta:"Create Your Client Portal"
   },
   {
-    name:"Finance",
+    name:"Finance", layout:'edit', shot:'assets/app-invoice.png', tab:true,
+    edCaption:'From checkout to reconciliation, connected.',
     cn:"嵌入支付方案", icon:'card', benefit:{lead:'Pay without leaving.', text:'Checkout happens right inside the customer journey.'}, tag:"Embedded Payments",
     title:"From Payment to Service. Seamlessly.",
-    sub:"Let customers purchase services and make payments without leaving your platform — creating a faster, simpler and more connected experience.",
+    sub:"Let customers purchase services and make payments without leaving your platform, creating a faster, simpler and more connected experience.",
     bullets:[
       "Accept payments directly within digital workflows",
       "Let clients purchase services through the client portal",
@@ -1102,10 +1129,11 @@ const SERVICES = [
     cta:"Explore Embedded Payments"
   },
   {
-    name:"Redclip Pay",
-    cn:"金融支付科技", icon:'banknote', benefit:{lead:'No finance department? No problem.', text:'From order to completion — payment collection, reconciliation, document generation and service delivery in one connected journey.'}, tag:"FinTech · Redclip Pay",
+    name:"Redclip Pay", layout:'float', shot:'assets/app-paydash.png', tab:true,
+    float:{statLabel:'Collections', statValue:'On schedule', toastTag:'Reconciliation', toastMsg:'Matched automatically'},
+    cn:"金融支付科技", icon:'banknote', benefit:{lead:'No finance department? No problem.', text:'Payment collection, reconciliation, document generation and service delivery in one connected journey, from order to completion.'}, tag:"FinTech · Redclip Pay",
     title:"Payments Made Effortless.",
-    sub:"Simplify digital and cross-border payment management with one connected solution — from customer collection to business settlement.",
+    sub:"Simplify digital and cross-border payment management with one connected solution, from customer collection to business settlement.",
     bullets:[
       "Accept eligible digital and cross-border payments",
       "Automatically reconcile payments against purchased services",
@@ -1120,10 +1148,11 @@ const SERVICES = [
     note:"Payment services, supported markets, currencies, settlement schedules and availability are subject to jurisdiction, provider approval and customer eligibility."
   },
   {
-    name:"Marketplace",
-    cn:"离岸服务市场", icon:'globe', benefit:{lead:'Go global without going it alone.', text:'Serve clients across more jurisdictions through a connected network of local providers — without acting as the registered filing agent in each location.'}, tag:"Offshore Services Marketplace",
+    name:"Marketplace", layout:'center', shot:'assets/app-services.png', tab:true,
+    pills:[['#16a34a','Compare'],['#f59e0b','Order'],['#ED1B34','Track']],
+    cn:"离岸服务市场", icon:'globe', benefit:{lead:'Go global without going it alone.', text:'Serve clients across more jurisdictions through a connected network of local providers, without acting as the registered filing agent in each location.'}, tag:"Offshore Services Marketplace",
     title:"Every Jurisdiction. One Marketplace.",
-    sub:"Access company formation, administration and transactional corporate services across international jurisdictions — even in markets outside your existing network or expertise.",
+    sub:"Access company formation, administration and transactional corporate services across international jurisdictions, even in markets outside your existing network or expertise.",
     bullets:[
       "Explore corporate services by country or jurisdiction",
       "Place orders in jurisdictions your team does not currently support",
@@ -1176,7 +1205,7 @@ SERVICES.forEach((s,i)=>{
           <a class="btn btn-red" href="#" data-goto="${CONTACT_PANEL}">${s.cta}</a>
           <a class="cta2" href="#" data-goto="${CONTACT_PANEL}">${s.cta2 || 'Book a Demo'}</a>
         </div>`;
-  const shotImg = `<img src="${s.shot}" alt="${s.tag} — inside the REDclip platform" loading="lazy">`;
+  const shotImg = `<img src="${s.shot}" alt="${s.tag} inside the REDclip platform" loading="lazy">`;
 
   if (s.layout === 'center'){
     /* concept 1: everything centred, the app takes the stage below */
@@ -1192,7 +1221,7 @@ SERVICES.forEach((s,i)=>{
         </div>
         ${ctas}
       </div>
-      <div class="p-body"><div class="c-shot">${shotImg}</div></div>
+      <div class="p-body"><div class="c-shot${s.tab?' tab':''}">${shotImg}</div></div>
     </div>
   </section>`;
 
@@ -1202,7 +1231,7 @@ SERVICES.forEach((s,i)=>{
   <section class="panel panel-first lay-float" data-panel="${panelOfService(i)}">
     <div class="panel-inner">
       <div class="p-head">
-        <div class="p-tag">${num} — ${s.tag}</div>
+        <div class="p-tag">${num} · ${s.tag}</div>
         <h2 class="p-title">${s.title}</h2>
         <p class="p-sub">${s.sub}</p>
         <ul class="p-list mini">
@@ -1212,7 +1241,7 @@ SERVICES.forEach((s,i)=>{
       </div>
       <div class="p-body">
         <div class="f-wrap">
-          <div class="f-shot">${shotImg}</div>
+          <div class="f-shot${s.tab?' tab':''}">${shotImg}</div>
           <div class="f-stat"><span>${s.float.statLabel}</span><b>${s.float.statValue}</b></div>
           <div class="f-toast">
             <span class="f-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>
@@ -1235,7 +1264,7 @@ SERVICES.forEach((s,i)=>{
         <div class="p-cta"><a class="cta2" href="#" data-goto="${CONTACT_PANEL}">${s.cta2 || 'Book a Demo'}</a></div>
       </div>
       <div class="p-body">
-        <div class="c-shot ed-shot">${shotImg}</div>
+        <div class="c-shot ed-shot${s.tab?' tab':''}">${shotImg}</div>
         <p class="ed-cap">${s.edCaption}</p>
       </div>
     </div>
@@ -1275,24 +1304,32 @@ SERVICES.forEach((s,i)=>{
   /* after Accounts: the two breather pages — a solid white sheet sweeps in
      right-to-left, then the content slides on (logos first on Partners) */
   if (i === 5){
+    const PARTNERS = [
+      ['reg','REG'],['chowtaifook','Chow Tai Fook'],['haier','Haier'],
+      ['huawei','Huawei'],['oocl','OOCL'],['chinatelecom','China Telecom'],
+      ['dji','DJI'],['hktdc','HKTDC'],['bytedance','ByteDance'],
+      ['vivo','VIVO'],['cosco','COSCO Shipping'],['neoasia','NeoAsia'],
+      ['tencent','Tencent'],['pingan','Ping An'],['luxshare','Luxshare ICT'],
+      ['baidu','Baidu'],
+    ];
+    const logoImgs = PARTNERS.map(([f,n])=>
+      `<img src="assets/partners/${f}.png" alt="${n}" loading="lazy">`).join('');
     html += `
   <section class="panel panel-break break-logos" data-panel="6">
     <div class="break-inner">
       <div class="logo-row">
-        <div class="logo-ph"><span>Your logo</span></div>
-        <div class="logo-ph"><span>Your logo</span></div>
-        <div class="logo-ph"><span>Your logo</span></div>
+        <div class="marq"><div class="marq-track">${logoImgs}${logoImgs}</div></div>
       </div>
       <div class="p-tag">Who we work with</div>
-      <h2 class="b-title">In good company.</h2>
-      <p class="b-sub">Corporate service firms, professional agents and their clients run their day-to-day on REDclip — across borders and jurisdictions.</p>
+      <h2 class="b-title">Trusted by industry leaders.</h2>
+      <p class="b-sub">From global brands to growing ventures, businesses across borders and jurisdictions run their corporate services with us.</p>
     </div>
   </section>
   <section class="panel panel-break break-about" data-panel="7">
     <div class="break-inner">
       <div class="p-tag">About us</div>
       <h2 class="b-title">Built on 31 years of practice.</h2>
-      <p class="b-sub">REDclip 小红夹 was founded in Singapore by Aries Wong 黄有榮 after three decades in corporate services. Every workflow on this platform encodes how seasoned practitioners actually run entities, filings and compliance — so your team works the way the best in the field do.</p>
+      <p class="b-sub">REDclip 小红夹 was founded in Singapore by Aries Wong 黄有榮 after three decades in corporate services. Every workflow on this platform encodes how seasoned practitioners actually run entities, filings and compliance, so your team works the way the best in the field do.</p>
       <div class="stat-row">
         <div><b>31</b><span>years in practice</span></div>
         <div><b>11</b><span>connected solutions</span></div>
@@ -1309,14 +1346,14 @@ html += `
   <div class="contact-inner">
     <div class="contact-info">
       <h2>Everything Your Global Business Needs. <span class="red">Connected.</span></h2>
-      <p class="lead">Manage entities, automate compliance and KYC, generate documents, coordinate accounting workflows, serve clients and collect payments through one connected ecosystem. From incorporation to ongoing administration, every workflow, record and transaction stays connected — giving your team greater visibility, control and efficiency.</p>
+      <p class="lead">Manage entities, automate compliance and KYC, generate documents, coordinate accounting workflows, serve clients and collect payments through one connected ecosystem. From incorporation to ongoing administration, every workflow, record and transaction stays connected, giving your team greater visibility, control and efficiency.</p>
       <div class="contact-list">
         <a href="tel:+6562288766"><span class="ci"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.9 15.9 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .57 3.6 1 1 0 0 1-.25 1z"/></svg></span>+65 6228 8766 &nbsp;·&nbsp; +65 8676 7676 (WhatsApp)</a>
         <a href="mailto:ceo@redclip.ai"><span class="ci"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></svg></span>ceo@redclip.ai</a>
         <a href="https://www.redclip.com" target="_blank" rel="noopener"><span class="ci"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7 9h-3a15.6 15.6 0 0 0-1.2-5.4A8 8 0 0 1 19 11zM12 4c.9 1.2 1.7 3.3 1.9 7h-3.8C10.3 7.3 11.1 5.2 12 4zM5 13h3a15.6 15.6 0 0 0 1.2 5.4A8 8 0 0 1 5 13zm4.2-7.4A15.6 15.6 0 0 0 8 11H5a8 8 0 0 1 4.2-5.4zM12 20c-.9-1.2-1.7-3.3-1.9-7h3.8c-.2 3.7-1 5.8-1.9 7zm2.8-1.6A15.6 15.6 0 0 0 16 13h3a8 8 0 0 1-4.2 5.4z"/></svg></span>www.redclip.com</a>
         <span><span class="ci"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>10 Anson Road, #11-20/21 International Plaza, Singapore 079903</span>
       </div>
-      <div class="founder"><b>Aries Wong 黄有榮</b> — Founder 创始人<br>REDCLIP PTE. LTD.</div>
+      <div class="founder"><b>Aries Wong 黄有榮</b> · Founder 创始人<br>REDCLIP PTE. LTD.</div>
     </div>
     <div class="lead-card">
       <h3>Discover the Right Solution for Your Business</h3>
@@ -1334,7 +1371,7 @@ html += `
           <option>501–1,000</option>
           <option>More than 1,000</option>
         </select>
-        <textarea name="message" class="full" placeholder="Current challenges (optional) — operational, compliance or technology challenges you would like to address…"></textarea>
+        <textarea name="message" class="full" placeholder="Current challenges (optional): operational, compliance or technology challenges you would like to address…"></textarea>
         <button type="submit" class="btn btn-red">Find My Solution</button>
         <p class="form-fine full">By submitting this form, you agree that our team may contact you regarding your enquiry. Your information will be handled in accordance with our Privacy Policy.</p>
       </form>
@@ -1749,7 +1786,7 @@ window.addEventListener('resize', ()=>{
 document.getElementById('leadForm').addEventListener('submit', e=>{
   e.preventDefault();
   const f = new FormData(e.target);
-  const subject = encodeURIComponent("Enquiry — " + (f.get('company') || f.get('name') || "REDclip Platform"));
+  const subject = encodeURIComponent("Enquiry: " + (f.get('company') || f.get('name') || "REDclip Platform"));
   const body = encodeURIComponent(
     `Name: ${f.get('name')}\nBusiness email: ${f.get('email')}\nTelephone: ${f.get('phone')||"-"}\nCompany: ${f.get('company')||"-"}\nCountry / region: ${f.get('country')||"-"}\nEntities managed: ${f.get('entities')||"-"}\n\nCurrent challenges:\n${f.get('message')||"-"}`
   );
