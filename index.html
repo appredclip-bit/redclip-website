@@ -55,6 +55,18 @@ nav > *{pointer-events:auto;}
 .nav-right{justify-self:end;}
 .logo{display:flex;line-height:1;cursor:pointer;user-select:none;text-decoration:none;}
 .logo img{height:44px;width:auto;display:block;}
+/* EN / 中文 switch, beside the Login button */
+.lang-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  appearance:none;cursor:pointer;font-family:inherit;
+  padding:7px 13px;border-radius:999px;
+  border:1px solid rgba(17,17,20,.16);background:rgba(255,255,255,.72);
+  backdrop-filter:blur(6px);
+  color:var(--ink);font-size:12.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.lang-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7;}
+.lang-btn:hover{color:var(--red);border-color:var(--red);background:#fff;}
 .nav-right{display:flex;align-items:center;gap:clamp(14px,2.1vw,30px);}
 .login-btn{
   position:relative;text-decoration:none;color:var(--ink);
@@ -146,8 +158,13 @@ nav > *{pointer-events:auto;}
   .nav-item{font-size:13px;}
   .login-btn{font-size:12.5px;}
   .nav-cta{padding:8px 12px;font-size:13px;}
-  .drop-menu{left:auto;right:-40px;transform:translate(0,-8px) scale(.985);}
-  .nav-drop.open .drop-menu{transform:translate(0,0) scale(1);}
+  /* phones: centre the panel on the SCREEN, not on the button */
+  .drop-menu{
+    position:fixed;top:calc(var(--nav-h) + 8px);left:50%;right:auto;
+    width:min(340px,92vw);
+    transform:translate(-50%,-8px) scale(.985);
+  }
+  .nav-drop.open .drop-menu{transform:translate(-50%,0) scale(1);}
 }
 @media (max-width:342px){
   .login-btn{display:none;}             /* only the very narrowest phones */
@@ -928,19 +945,84 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
     margin:18px auto 0;
     border-radius:16px;
   }
-  .panel{padding:calc(var(--nav-h) + 40px) 6vw 70px;overflow-y:auto;align-items:flex-start;}
-  .panel-inner,.contact-inner{margin:auto 0;}
-  .panel-inner{grid-template-columns:1fr;gap:22px;}
-  .panel-first .panel-inner{grid-template-columns:1fr;row-gap:18px;}
+  /* ---- phones: every page is ONE screen, no scrolling inside a page ---- */
+  .panel{
+    padding:calc(var(--nav-h) + 34px) 6vw 26px;
+    overflow:hidden;align-items:center;
+  }
+  .panel-inner,.contact-inner{margin:0;}
+  .panel-inner{grid-template-columns:1fr;gap:14px;}
+  .panel-first .panel-inner{grid-template-columns:1fr;row-gap:12px;}
   .panel-first .p-body{padding-top:0;}
-  .p-list.cols{grid-template-columns:1fr;}
-  .p-feature{max-width:100%;margin-top:14px;}
-  .p-benefit{font-size:12.5px;padding:11px 13px 12px;}
-  .panel-num{top:auto;bottom:8px;right:4vw;font-size:96px;}
-  .p-card li{font-size:13.5px;}
-  .contact-inner{grid-template-columns:1fr;gap:28px;}
+  .p-list.cols,.p-list.cols3{grid-template-columns:1fr;}
+  /* the app screenshots are too small to read on a phone — text only */
+  .c-shot,.f-wrap,.p-feature,.ed-cap,.pill-row{display:none;}
+  .c-row{display:block;}
+  .lay-center .panel-inner,.lay-center .p-head{text-align:left;}
+  .lay-center .p-tag::before{display:inline-block;}
+  .lay-center .p-sub,.lay-center .p-extra p{margin-left:0;margin-right:0;}
+  .lay-center .p-cta,.p-cta{justify-content:flex-start;}
+  .lay-center .p-note{text-align:left;margin-left:0;}
+  /* tighter type so the longest page still lands inside one screen */
+  .p-title{font-size:clamp(19px,5.1vw,24px);line-height:1.15;}
+  .p-sub{font-size:12.5px;line-height:1.45;margin-top:8px;}
+  .p-cn{display:none;}
+  .p-icon{display:none;}
+  .p-tag{font-size:10px;margin-bottom:7px;}
+  .p-tag::before{width:16px;}
+  .p-list{margin-top:9px;gap:4px;}
+  .p-list li,.p-list.mini li,.p-list.cols3 li,.p-list.c-side li{
+    font-size:11.5px;line-height:1.33;gap:7px;
+  }
+  .p-list .clip,.p-list.cols3 .clip,.p-list.c-side .clip{flex:0 0 12px;margin-top:1px;}
+  .p-list .clip svg,.p-list.cols3 .clip svg,.p-list.c-side .clip svg{width:12px;height:12px;}
+  .p-extra{margin-top:9px;}
+  .p-extra h3{font-size:12.5px;}
+  .p-extra p{font-size:11.5px;line-height:1.4;margin-top:3px;}
+  .p-cta{margin-top:12px;gap:14px;}
+  .p-cta .btn-red{font-size:13.5px;}
+  .p-cta .cta2{font-size:12.5px;}
+  .p-note{font-size:10px;margin-top:7px;line-height:1.4;}
+  /* the longest pages get one more notch down */
+  .dense .p-title{font-size:clamp(18px,4.7vw,21px);}
+  .dense .p-sub{font-size:11.8px;line-height:1.4;}
+  .dense .p-list li{font-size:10.9px;line-height:1.29;}
+  .dense .p-list{gap:3px;}
+  .dense .p-extra p{font-size:10.8px;line-height:1.35;}
+  .panel-num{display:none;}
+  /* contact page keeps its own scroll — it is a form, not a slide */
+  .panel-contact{overflow-y:auto;align-items:flex-start;}
+  .contact-inner{grid-template-columns:1fr;gap:22px;margin:auto 0;}
   .lead-form{grid-template-columns:1fr;}
   .foot-note{display:none;}
+  /* breather pages */
+  .b-title{font-size:clamp(23px,6.4vw,30px);}
+  .b-sub{font-size:13px;line-height:1.55;}
+  .logo-ph{width:clamp(88px,27vw,120px);}
+  .stat-row{gap:22px;}
+  .stat-row b{font-size:clamp(28px,8vw,38px);}
+  /* pull the strand back so the helix reads at phone width */
+  .hero-sticky{background:radial-gradient(circle at 50% 38%, #fbfafa 0%, #efeded 100%);}
+  .hero-sticky video{object-fit:contain;}
+}
+/* shorter phones (SE, older Androids): one more notch so nothing is cut off */
+@media (max-width:900px) and (max-height:790px){
+  .panel{padding:calc(var(--nav-h) + 26px) 5.5vw 16px;}
+  .p-title{font-size:clamp(17px,4.6vw,20px);}
+  .p-sub{font-size:11.8px;line-height:1.38;margin-top:6px;}
+  .p-list{margin-top:7px;gap:3px;}
+  .p-list li,.p-list.mini li,.p-list.cols3 li,.p-list.c-side li{font-size:11px;line-height:1.27;}
+  .dense .p-list li{font-size:10.3px;line-height:1.24;}
+  .dense .p-sub{font-size:11.2px;}
+  .dense .p-title{font-size:clamp(16px,4.3vw,19px);}
+  .p-extra{margin-top:7px;}
+  .p-extra h3{font-size:11.8px;}
+  .p-extra p{font-size:10.8px;line-height:1.32;}
+  .dense .p-extra p{font-size:10.2px;line-height:1.3;}
+  .p-cta{margin-top:10px;}
+  .b-title{font-size:clamp(20px,5.8vw,26px);}
+  .b-sub{font-size:12px;}
+  .stat-row{margin-top:18px;gap:18px;}
 }
 </style>
 </head>
@@ -954,14 +1036,18 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
   <div class="nav-center">
     <div class="nav-drop" id="navDrop">
       <button class="nav-item" id="svcBtn" aria-haspopup="true" aria-expanded="false">
-        Services <span class="caret" aria-hidden="true"></span>
+        <span id="svcBtnLabel">Services</span> <span class="caret" aria-hidden="true"></span>
       </button>
       <div class="drop-menu" id="svcMenu" role="menu"><!-- built from SERVICES --></div>
     </div>
-    <a class="nav-item hide-sm" href="#" data-goto="13">Contact</a>
+    <a class="nav-item hide-sm" href="#" data-goto="13" id="navContact">Contact</a>
   </div>
   <div class="nav-right">
-    <a class="nav-cta" href="login.html" title="Log in: client or agent">Login</a>
+    <button class="lang-btn" id="langBtn" type="button" aria-label="Switch language">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
+      <span id="langLabel">中文</span>
+    </button>
+    <a class="nav-cta" href="login.html" id="navLogin">Login</a>
   </div>
 </nav>
 
@@ -1221,6 +1307,293 @@ const SERVICES = [
   }
 ];
 
+/* ================= 中文 (Simplified Chinese) ================= */
+/* keyed by the English service name; merged over the English entry when
+   the visitor switches language, so structure/layout fields carry over */
+const ZH = {
+  "Entities":{
+    name:"实体管理", tag:"全球企业实体管理",
+    title:"每一家公司，尽在一处。",
+    sub:"通过一个安全平台，全面掌控您在全球的公司、企业记录与法定义务。",
+    bullets:[
+      "集中管理企业记录、法定文件与交易历史",
+      "维护董事、股东及最终受益人的电子登记册",
+      "以企业级信息安全管理跨司法管辖区的实体架构",
+      "确保企业资料准确、及时并随时可供审计",
+      "追踪股权、任免及重要企业变更",
+      "与客户、内部团队及专业服务机构安全协作"
+    ],
+    pills:[["#16a34a","准确"],["#f59e0b","及时"],["#ED1B34","可审计"]],
+    cta:"管理您的实体"
+  },
+  "Verify":{
+    name:"智能审核", tag:"AI 合规与 KYC",
+    title:"了解每位客户，评估每项风险。",
+    sub:"借助智能化的 AI 合规流程，提升开户效率与风险洞察力。",
+    bullets:[
+      "自动完成文件、身份与企业验证",
+      "简化 KYC、KYB 与客户尽职调查流程",
+      "基于风险开展客户与实体评估",
+      "生成可配置的开户风险评分",
+      "按低、中、高风险对申请人分级",
+      "支持持续合规监控与定期复核",
+      "保留清晰、可供审计的合规记录",
+      "将高风险个案升级至强化尽职调查与人工复核"
+    ],
+    edCaption:"每一次审核，皆有评分与留痕。",
+    cta:"实现 KYC 自动化"
+  },
+  "Comply":{
+    name:"合规提醒", tag:"合规到期追踪",
+    title:"每个期限，每个辖区。",
+    sub:"通过一个集中的合规日历，管理经常性义务、法定申报与监管到期日。",
+    bullets:[
+      "追踪年度申报、法定文件、完成阶段与提交状态",
+      "监控牌照、许可与注册续期",
+      "向客户、代理与责任团队自动发送到期提醒",
+      "升级逾期、未完成或高优先级事项",
+      "实时查看每家实体的合规状态",
+      "协调内部团队与专业服务机构",
+      "保留清晰、可供审计的合规活动记录"
+    ],
+    float:{statLabel:"待续期", statValue:"25 家实体", toastTag:"合规", toastMsg:"每个期限均已追踪"},
+    cta:"开始追踪期限"
+  },
+  "Flow":{
+    name:"流程自动化", tag:"CRM 与流程自动化",
+    title:"每位客户，一条顺畅流程。",
+    sub:"将潜客互动、客户开户、公司设立与后续服务交付，串联为一致且可追踪的工作流。",
+    bullets:[
+      "集中管理客户、潜客与联系人信息",
+      "记录潜客痛点、咨询、需求与沟通内容",
+      "追踪从初次咨询到成交的每个销售阶段",
+      "管理从开户到公司设立的完整旅程",
+      "自动执行线索培育、提醒与跟进",
+      "创建定制化的数字开户流程",
+      "发送精准的邮件营销、更新与服务通告",
+      "自动分派任务、文件与审批",
+      "监控服务请求、交付项与完成阶段",
+      "保留完整且可检索的沟通与活动记录",
+      "让团队清楚掌握每个阶段的下一步"
+    ],
+    edCaption:"一条管道，贯穿每位客户，持续推进。",
+    cta:"实现客户流程自动化"
+  },
+  "Documents":{
+    name:"文件生成", tag:"文件自动化",
+    title:"每份文件，始终最新。",
+    sub:"将已核实的客户与实体数据，转化为准确、一致且专业的企业文件，更快完成。",
+    bullets:[
+      "付款后自动创建交易与任务清单",
+      "生成决议、法定表格、协议及配套文件",
+      "使用已核实的客户与实体数据自动填充文件",
+      "管理审定模板、标准条款与各辖区格式",
+      "将文件分派给客户、团队与服务机构审阅及批准",
+      "支持电子签名与数字审批流程",
+      "追踪制备、递交、备案与完成阶段",
+      "政府备案完成后，以最新信息更新实体记录",
+      "保留安全的文件版本、交易记录与完整审计历史",
+      "减少重复录入与文件制备错误"
+    ],
+    pills:[["#16a34a","生成"],["#f59e0b","审批"],["#ED1B34","电子签名"]],
+    cta:"了解文件自动化"
+  },
+  "Accounts":{
+    name:"账务追踪", tag:"账务进度追踪",
+    title:"每本账目，一目了然。",
+    sub:"清楚掌握每家实体已完成、待处理以及需立即跟进的事项。",
+    bullets:[
+      "监控记账进度与完成状态",
+      "追踪财务报表的编制、复核与批准",
+      "管理税务、财务报告与政府申报期限",
+      "追踪税务申报的递交与完成状态",
+      "将工作分派给内部团队、外部会计师与服务机构",
+      "识别缺失记录、未决疑问与延误任务",
+      "就待补资料与临近期限发送提醒",
+      "查看整个实体组合的账务进度",
+      "保留清晰的任务、递交与完成记录"
+    ],
+    float:{statLabel:"未付款项", statValue:"620.00 新元", toastTag:"账务状态", toastMsg:"进度正常"},
+    cta:"提升账务透明度"
+  },
+  "Intelligence":{
+    name:"智能助理", tag:"AI 秘书 · 智能代理",
+    title:"AI 秘书：为您而工作的智能。",
+    sub:"打造 AI 就绪的运营模式：智能秘书理解指令、支持团队并协调日常事务，重要决策始终由人掌控。",
+    bullets:[
+      "在平台各处随时调用内置 AI 助理",
+      "自动处理重复性的行政与运营事务",
+      "从文件中提取、整理并分析信息",
+      "将已核实的 KYC 与 KYB 资料自动填入客户与实体档案",
+      "跨实体、团队与关联流程协调任务",
+      "以自然语言指令启动复杂流程",
+      "生成任务清单并备妥待审文件",
+      "监控期限、未决事项与需跟进事宜",
+      "应用审批规则、用户权限与人工复核节点",
+      "将例外情况与高风险决策升级至人工复核",
+      "记录指令、操作与决策以便追责",
+      "随组织成长扩展智能自动化"
+    ],
+    extra:[{h:"只需告诉 AI 秘书您的需求", p:"指令示例：“为实体 XXXX 办理股份转让，由股东 XXX Wong 转让予 XXX Tan。” AI 秘书会识别所需流程、调取相关实体信息、创建任务清单，并备妥文件供获授权人员审阅与批准。"}],
+    float:{statLabel:"AI 秘书", statValue:"草拟完成", toastTag:"文件", toastMsg:"3 份待审阅"},
+    cta:"认识您的 AI 秘书", cta2:"组建您的 AI 团队"
+  },
+  "Portal":{
+    name:"客户门户", tag:"安全客户门户",
+    title:"他们的实体，他们的记录，您的时间。",
+    sub:"为每位客户提供专属的安全数字空间。客户可自行查阅信息、下载文件并提交请求，减少您团队的日常行政工作。",
+    bullets:[
+      "让获授权客户随时安全访问自己的实体",
+      "共享法定登记册、企业记录与重要文件",
+      "客户无需等待人工协助即可自行查阅信息",
+      "允许客户安全上传文件与证明材料",
+      "展示合规期限、备案进度与服务状态",
+      "在一处管理咨询、服务请求与沟通",
+      "通过 Redclip Chat 直接沟通",
+      "发送服务更新、提醒与文件通知",
+      "以角色权限与用户权限保护信息",
+      "保留完整的客户活动与沟通记录",
+      "自定义颜色、品牌与主题，打造专属体验"
+    ],
+    extra:[{h:"更少行政，更好服务。", p:"减少重复的文件索取、邮件跟进与状态查询，同时让客户拥有更高的可见性与掌控力。"}],
+    pills:[["#16a34a","记录"],["#f59e0b","文件"],["#ED1B34","沟通"]],
+    cta:"创建您的客户门户"
+  },
+  "Finance":{
+    name:"嵌入支付", tag:"嵌入式支付",
+    title:"从付款到服务，无缝衔接。",
+    sub:"让客户无需离开平台即可购买服务并完成付款，体验更快、更简单、更连贯。",
+    bullets:[
+      "在数字流程中直接收款",
+      "让客户通过客户门户购买服务",
+      "简化结账、开票与收款",
+      "将每笔交易关联至相应客户、实体与服务",
+      "付款成功后自动触发任务与服务流程",
+      "自动更新付款与交易状态",
+      "让团队清楚掌握已付与未付交易",
+      "保留完整的付款与服务订单记录",
+      "提供一致的品牌化付款体验"
+    ],
+    edCaption:"从结账到对账，全程贯通。",
+    cta:"了解嵌入式支付"
+  },
+  "Redclip Pay":{
+    name:"Redclip Pay", tag:"金融科技 · Redclip Pay",
+    title:"支付，从此轻松。",
+    sub:"以一套互联方案简化数字与跨境支付管理，从客户收款到企业结算。",
+    bullets:[
+      "受理合资格的数字与跨境付款",
+      "自动将付款与所购服务对账",
+      "将交易标记至相应客户、代理档案与实体",
+      "减少人工对账与重复录入",
+      "在一处监控收款、交易状态与结算",
+      "安排划付至您指定的企业账户",
+      "保留清晰的交易记录以供报告与对账",
+      "通过一个中央仪表板掌控支付活动"
+    ],
+    extra:[
+      {h:"没有财务部门？也没问题。", p:"Redclip Pay 帮助自动处理日常支付行政工作，让您的团队拥有更高的可见性与掌控力。"},
+      {h:"从下单到完成，一条贯通的旅程。", p:"将收款与对账、文件生成、任务创建及服务交付连接起来，无需在多个系统之间切换。"}
+    ],
+    float:{statLabel:"收款", statValue:"按时到账", toastTag:"对账", toastMsg:"已自动匹配"},
+    cta:"了解 Redclip Pay",
+    note:"支付服务、支持的市场、币种、结算周期及可用性，须视司法管辖区、服务商审批及客户资格而定。"
+  },
+  "Marketplace":{
+    name:"服务市场", tag:"离岸服务市场",
+    title:"每个辖区，一个市场。",
+    sub:"在国际各司法管辖区获取公司注册、行政管理与企业交易服务，即使是您现有网络或专长之外的市场。",
+    bullets:[
+      "按国家或司法管辖区浏览企业服务",
+      "在团队目前未覆盖的辖区下单",
+      "对接合资格的本地服务机构",
+      "采购公司注册与后续行政服务",
+      "订购临时性企业交易与法定服务",
+      "比较可选服务套餐、要求与价格",
+      "通过集成的数字流程提交客户与实体信息",
+      "为每笔服务交易生成并管理文件",
+      "追踪订单、所需材料与服务交付进度",
+      "集中保存沟通、文件与已完成服务的记录",
+      "无需在每个市场设立机构即可扩展服务覆盖"
+    ],
+    extra:[{h:"走向全球，不必独行。", p:"通过互联的本地服务机构网络服务更多辖区的客户，无需亲自在每个地点担任注册申报代理。"}],
+    pills:[["#16a34a","比较"],["#f59e0b","下单"],["#ED1B34","追踪"]],
+    cta:"探索服务市场", cta2:"成为服务机构",
+    note:"服务市场的准入与服务，须遵守适用法律、牌照要求、服务商资格、客户接纳条件及各辖区的具体限制。"
+  }
+};
+
+/* every non-service string on the page */
+const UI = {
+  en:{
+    navServices:"Services", navContact:"Contact", navLogin:"Login", bookDemo:"Book a Demo",
+    dropExplore:"Explore", dropBlurb:"One connected platform for entities, compliance, workflows and payments.",
+    dropSee:"See the services →", dropServices:"Services", dropContactDesc:"Book a free consultation.",
+    entryEyebrow:"31 years in practice",
+    entryLine:"Three decades of corporate services, encoded into one platform.",
+    partnersTag:"Who we work with", partnersTitle:"Trusted by industry leaders.",
+    partnersSub:"From global brands to growing ventures, businesses across borders and jurisdictions run their corporate services with us.",
+    aboutTag:"About us", aboutTitle:"Built on 31 years of practice.",
+    aboutSub:"REDclip 小红夹 was founded in Singapore by Aries Wong 黄有榮 after three decades in corporate services. Every workflow on this platform encodes how seasoned practitioners actually run entities, filings and compliance, so your team works the way the best in the field do.",
+    stat1:"years in practice", stat2:"connected solutions", stat3:"platform for global business",
+    partnersLabel:"Partners", aboutLabel:"About", contactLabel:"Contact",
+    contactTitleA:"Everything Your Global Business Needs. ", contactTitleB:"Connected.",
+    contactLead:"Manage entities, automate compliance and KYC, generate documents, coordinate accounting workflows, serve clients and collect payments through one connected ecosystem. From incorporation to ongoing administration, every workflow, record and transaction stays connected, giving your team greater visibility, control and efficiency.",
+    ctaConsult:"Book a Free Consultation", ctaDemo:"Request a Platform Demo",
+    founderRole:"Founder 创始人",
+    formTitle:"Discover the Right Solution for Your Business",
+    formDesc:"Tell us about your operations, target jurisdictions and current challenges. Our team will help you identify the right combination of solutions for your business.",
+    fName:"Name", hName:"Enter your full name.",
+    fEmail:"Business Email", hEmail:"Enter your business email address.",
+    fPhone:"Business Telephone", hPhone:"Include your country code.",
+    fCompany:"Company Name", hCompany:"Enter your company or organisation name.",
+    fCountry:"Country or Region", hCountry:"Select your primary business location.",
+    fEntities:"Number of Entities Managed", fChallenges:"Current Challenges", optional:"Optional",
+    hChallenges:"Tell us about any operational, compliance or technology challenges you would like to address.",
+    selectPlaceholder:"Select…", moreThan:"More than 1,000",
+    formBtn:"Find My Solution",
+    formFine:"By submitting this form, you agree that our team may contact you regarding your enquiry. Your information will be handled in accordance with our Privacy Policy.",
+    countries:["Singapore","Malaysia","Hong Kong SAR","China","Indonesia","Vietnam","Thailand","Philippines","India","United Arab Emirates","United Kingdom","United States","Australia","Other"],
+    svcDesc:["Records, registers and structures.","Automated KYC and KYB reviews.","Deadlines, tracked automatically.","Onboarding to service delivery.","Generate corporate documents.","Portfolio-wide accounting visibility.","AI agents with human control.","Secure access for your clients.","Payments inside your workflows.","Digital and cross-border payments.","A global provider network."]
+  },
+  zh:{
+    navServices:"服务", navContact:"联系我们", navLogin:"登录", bookDemo:"预约演示",
+    dropExplore:"探索", dropBlurb:"一个互联平台，涵盖实体、合规、流程与支付。",
+    dropSee:"查看全部服务 →", dropServices:"服务", dropContactDesc:"预约免费咨询。",
+    entryEyebrow:"三十一年专业实践",
+    entryLine:"三十年企业服务经验，凝聚于一个平台。",
+    partnersTag:"合作伙伴", partnersTitle:"深受行业领军企业信赖。",
+    partnersSub:"从全球品牌到成长型企业，众多跨境经营的公司都通过我们管理其企业服务。",
+    aboutTag:"关于我们", aboutTitle:"三十一年实践沉淀。",
+    aboutSub:"REDclip 小红夹 由黄有榮 (Aries Wong) 在新加坡创立，此前他已在企业服务领域深耕三十年。平台上的每一个流程，都凝聚了资深从业者管理实体、申报与合规的实际做法，让您的团队以业内领先的方式工作。",
+    stat1:"年专业实践", stat2:"项互联解决方案", stat3:"个全球商业平台",
+    partnersLabel:"合作伙伴", aboutLabel:"关于我们", contactLabel:"联系我们",
+    contactTitleA:"全球业务所需的一切，", contactTitleB:"尽在互联。",
+    contactLead:"通过一个互联生态系统管理实体、自动化合规与 KYC、生成文件、协调账务流程、服务客户并收取款项。从公司注册到日常运营，每个流程、记录与交易都保持连通，让团队拥有更高的可见性、掌控力与效率。",
+    ctaConsult:"预约免费咨询", ctaDemo:"申请平台演示",
+    founderRole:"创始人 Founder",
+    formTitle:"为您的业务找到合适方案",
+    formDesc:"告诉我们您的运营情况、目标司法管辖区与当前挑战，我们的团队将协助您找到最合适的方案组合。",
+    fName:"姓名", hName:"请输入您的全名。",
+    fEmail:"企业邮箱", hEmail:"请输入您的企业邮箱地址。",
+    fPhone:"联系电话", hPhone:"请包含国家或地区区号。",
+    fCompany:"公司名称", hCompany:"请输入您的公司或机构名称。",
+    fCountry:"国家或地区", hCountry:"请选择您的主要经营地。",
+    fEntities:"管理的实体数量", fChallenges:"当前挑战", optional:"选填",
+    hChallenges:"请告诉我们您希望解决的运营、合规或技术方面的挑战。",
+    selectPlaceholder:"请选择…", moreThan:"超过 1,000",
+    formBtn:"获取解决方案",
+    formFine:"提交本表格即表示您同意我们的团队就您的咨询与您联系。我们将依据隐私政策处理您的信息。",
+    countries:["新加坡","马来西亚","中国香港","中国内地","印度尼西亚","越南","泰国","菲律宾","印度","阿联酋","英国","美国","澳大利亚","其他"],
+    svcDesc:["记录、登记册与架构。","自动化 KYC 与 KYB 审核。","自动追踪各项到期日。","从开户到服务交付。","生成企业文件。","全组合账务透明度。","AI 助理，人工掌控。","为客户提供安全访问。","流程内嵌支付。","数字与跨境支付。","全球服务机构网络。"]
+  }
+};
+
+let LANG = localStorage.getItem('redclip-lang') === 'zh' ? 'zh' : 'en';
+const t = k => UI[LANG][k];
+/* English entry with its Chinese fields layered on top */
+const L = s => (LANG === 'zh' && ZH[s.name]) ? {...s, ...ZH[s.name]} : s;
+
 const CLIP_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#ED1B34" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05 12.25 20.24a6 6 0 0 1-8.49-8.49l8.57-8.57a4 4 0 1 1 5.66 5.66l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>`;
 
 /* simple line icons, huly-style, one per service */
@@ -1246,15 +1619,17 @@ const CONTACT_PANEL = SERVICES.length + 2;                 // 13
 const panelOfService = i => i < 6 ? i : i + 2;
 
 const track = document.getElementById('hTrack');
+function buildPanels(){
 let html = "";
-SERVICES.forEach((s,i)=>{
+SERVICES.forEach((en,i)=>{
+  const s = L(en);                       // English entry, Chinese layered on top
   const num  = String(i+1).padStart(2,"0");
   const ctas = `
         <div class="p-cta">
           <a class="btn btn-red" href="#" data-goto="${CONTACT_PANEL}">${s.cta}</a>
-          <a class="cta2" href="#" data-goto="${CONTACT_PANEL}">${s.cta2 || 'Book a Demo'}</a>
+          <a class="cta2" href="#" data-goto="${CONTACT_PANEL}">${s.cta2 || t('bookDemo')}</a>
         </div>`;
-  const shotImg = `<img src="${s.shot}" alt="${s.tag} inside the REDclip platform" loading="lazy">`;
+  const shotImg = `<img src="${s.shot}" alt="${s.tag}" loading="lazy">`;
   /* the write-up's secondary headings (e.g. "No Finance Department? No Problem.") */
   const extra = (s.extra||[]).map(e=>
     `<div class="p-extra"><h3>${e.h}</h3><p>${e.p}</p></div>`).join('');
@@ -1263,11 +1638,13 @@ SERVICES.forEach((s,i)=>{
   const list = (cols)=>`<ul class="p-list ${cols}">${
     s.bullets.map(b=>`<li><span class="clip">${CLIP_SVG}</span>${b}</li>`).join("")}</ul>`;
   const note = s.note ? `<p class="p-note">${s.note}</p>` : "";
+  /* long pages drop one type notch on phones so they still fit one screen */
+  const dense = (s.bullets.length >= 10 || (s.extra||[]).length) ? ' dense' : '';
 
   if (s.layout === 'center'){
     /* concept 1: everything centred, the app takes the stage below */
     html += `
-  <section class="panel panel-first lay-center${s.note?' has-note':''}" data-panel="${panelOfService(i)}">
+  <section class="panel panel-first lay-center${s.note?' has-note':''}${dense}" data-panel="${panelOfService(i)}">
     <div class="panel-inner">
       <div class="p-tag">${s.tag} / ${num}</div>
       <div class="p-head">
@@ -1292,7 +1669,7 @@ SERVICES.forEach((s,i)=>{
   } else if (s.layout === 'float'){
     /* concept 2: split with a tilted app shot and floating status cards */
     html += `
-  <section class="panel panel-first lay-float" data-panel="${panelOfService(i)}">
+  <section class="panel panel-first lay-float${dense}" data-panel="${panelOfService(i)}">
     <div class="panel-inner">
       <div class="p-head">
         <div class="p-tag">${num} · ${s.tag}</div>
@@ -1320,7 +1697,7 @@ SERVICES.forEach((s,i)=>{
     /* concept 3: editorial — pared right down (user request: no number,
        no side label, no status list, no big button) */
     html += `
-  <section class="panel panel-first lay-edit" data-panel="${panelOfService(i)}">
+  <section class="panel panel-first lay-edit${dense}" data-panel="${panelOfService(i)}">
     <div class="panel-inner">
       <div class="p-head">
         <h2 class="p-title">${s.title}</h2>
@@ -1387,20 +1764,20 @@ SERVICES.forEach((s,i)=>{
       <div class="logo-row">
         <div class="marq"><div class="marq-track">${logoImgs}${logoImgs}</div></div>
       </div>
-      <div class="p-tag">Who we work with</div>
-      <h2 class="b-title">Trusted by industry leaders.</h2>
-      <p class="b-sub">From global brands to growing ventures, businesses across borders and jurisdictions run their corporate services with us.</p>
+      <div class="p-tag">${t('partnersTag')}</div>
+      <h2 class="b-title">${t('partnersTitle')}</h2>
+      <p class="b-sub">${t('partnersSub')}</p>
     </div>
   </section>
   <section class="panel panel-break break-about" data-panel="7">
     <div class="break-inner">
-      <div class="p-tag">About us</div>
-      <h2 class="b-title">Built on 31 years of practice.</h2>
-      <p class="b-sub">REDclip 小红夹 was founded in Singapore by Aries Wong 黄有榮 after three decades in corporate services. Every workflow on this platform encodes how seasoned practitioners actually run entities, filings and compliance, so your team works the way the best in the field do.</p>
+      <div class="p-tag">${t('aboutTag')}</div>
+      <h2 class="b-title">${t('aboutTitle')}</h2>
+      <p class="b-sub">${t('aboutSub')}</p>
       <div class="stat-row">
-        <div><b>31</b><span>years in practice</span></div>
-        <div><b>11</b><span>connected solutions</span></div>
-        <div><b>1</b><span>platform for global business</span></div>
+        <div><b>31</b><span>${t('stat1')}</span></div>
+        <div><b>11</b><span>${t('stat2')}</span></div>
+        <div><b>1</b><span>${t('stat3')}</span></div>
       </div>
     </div>
   </section>`;
@@ -1412,11 +1789,11 @@ html += `
 <section class="panel panel-contact" data-panel="${CONTACT_PANEL}" id="contact">
   <div class="contact-inner">
     <div class="contact-info">
-      <h2>Everything Your Global Business Needs. <span class="red">Connected.</span></h2>
-      <p class="lead">Manage entities, automate compliance and KYC, generate documents, coordinate accounting workflows, serve clients and collect payments through one connected ecosystem. From incorporation to ongoing administration, every workflow, record and transaction stays connected, giving your team greater visibility, control and efficiency.</p>
+      <h2>${t('contactTitleA')}<span class="red">${t('contactTitleB')}</span></h2>
+      <p class="lead">${t('contactLead')}</p>
       <div class="p-cta contact-cta">
-        <a class="btn btn-red" href="mailto:ceo@redclip.ai?subject=Book%20a%20Free%20Consultation">Book a Free Consultation</a>
-        <a class="cta2" href="mailto:ceo@redclip.ai?subject=Request%20a%20Platform%20Demo">Request a Platform Demo</a>
+        <a class="btn btn-red" href="mailto:ceo@redclip.ai?subject=Book%20a%20Free%20Consultation">${t('ctaConsult')}</a>
+        <a class="cta2" href="mailto:ceo@redclip.ai?subject=Request%20a%20Platform%20Demo">${t('ctaDemo')}</a>
       </div>
       <div class="contact-list">
         <a href="tel:+6562288766"><span class="ci"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.9 15.9 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .57 3.6 1 1 0 0 1-.25 1z"/></svg></span>+65 6228 8766 &nbsp;·&nbsp; +65 8676 7676 (WhatsApp)</a>
@@ -1424,64 +1801,54 @@ html += `
         <a href="https://www.redclip.com" target="_blank" rel="noopener"><span class="ci"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7 9h-3a15.6 15.6 0 0 0-1.2-5.4A8 8 0 0 1 19 11zM12 4c.9 1.2 1.7 3.3 1.9 7h-3.8C10.3 7.3 11.1 5.2 12 4zM5 13h3a15.6 15.6 0 0 0 1.2 5.4A8 8 0 0 1 5 13zm4.2-7.4A15.6 15.6 0 0 0 8 11H5a8 8 0 0 1 4.2-5.4zM12 20c-.9-1.2-1.7-3.3-1.9-7h3.8c-.2 3.7-1 5.8-1.9 7zm2.8-1.6A15.6 15.6 0 0 0 16 13h3a8 8 0 0 1-4.2 5.4z"/></svg></span>www.redclip.com</a>
         <span><span class="ci"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg></span>10 Anson Road, #11-20/21 International Plaza, Singapore 079903</span>
       </div>
-      <div class="founder"><b>Aries Wong 黄有榮</b> · Founder 创始人<br>REDCLIP PTE. LTD.</div>
+      <div class="founder"><b>Aries Wong 黄有榮</b> · ${t('founderRole')}<br>REDCLIP PTE. LTD.</div>
     </div>
     <div class="lead-card">
-      <h3>Discover the Right Solution for Your Business</h3>
-      <p>Tell us about your operations, target jurisdictions and current challenges. Our team will help you identify the right combination of solutions for your business.</p>
+      <h3>${t('formTitle')}</h3>
+      <p>${t('formDesc')}</p>
       <form class="lead-form" id="leadForm">
-        <label>Name<input type="text" name="name" required><i>Enter your full name.</i></label>
-        <label>Business Email<input type="email" name="email" required><i>Enter your business email address.</i></label>
-        <label>Business Telephone<input type="tel" name="phone"><i>Include your country code.</i></label>
-        <label>Company Name<input type="text" name="company"><i>Enter your company or organisation name.</i></label>
-        <label>Country or Region
+        <label>${t('fName')}<input type="text" name="name" required><i>${t('hName')}</i></label>
+        <label>${t('fEmail')}<input type="email" name="email" required><i>${t('hEmail')}</i></label>
+        <label>${t('fPhone')}<input type="tel" name="phone"><i>${t('hPhone')}</i></label>
+        <label>${t('fCompany')}<input type="text" name="company"><i>${t('hCompany')}</i></label>
+        <label>${t('fCountry')}
           <select name="country">
-            <option value="">Select…</option>
-            <option>Singapore</option>
-            <option>Malaysia</option>
-            <option>Hong Kong SAR</option>
-            <option>China</option>
-            <option>Indonesia</option>
-            <option>Vietnam</option>
-            <option>Thailand</option>
-            <option>Philippines</option>
-            <option>India</option>
-            <option>United Arab Emirates</option>
-            <option>United Kingdom</option>
-            <option>United States</option>
-            <option>Australia</option>
-            <option>Other</option>
+            <option value="">${t('selectPlaceholder')}</option>
+            ${t('countries').map(c=>`<option>${c}</option>`).join('')}
           </select>
-          <i>Select your primary business location.</i>
+          <i>${t('hCountry')}</i>
         </label>
-        <label>Number of Entities Managed
+        <label>${t('fEntities')}
           <select name="entities">
-            <option value="">Select…</option>
+            <option value="">${t('selectPlaceholder')}</option>
             <option>0–100</option>
             <option>101–500</option>
             <option>501–1,000</option>
-            <option>More than 1,000</option>
+            <option>${t('moreThan')}</option>
           </select>
         </label>
-        <label class="full">Current Challenges <span class="opt">Optional</span>
+        <label class="full">${t('fChallenges')} <span class="opt">${t('optional')}</span>
           <textarea name="message"></textarea>
-          <i>Tell us about any operational, compliance or technology challenges you would like to address.</i>
+          <i>${t('hChallenges')}</i>
         </label>
-        <button type="submit" class="btn btn-red">Find My Solution</button>
-        <p class="form-fine full">By submitting this form, you agree that our team may contact you regarding your enquiry. Your information will be handled in accordance with our Privacy Policy.</p>
+        <button type="submit" class="btn btn-red">${t('formBtn')}</button>
+        <p class="form-fine full">${t('formFine')}</p>
       </form>
     </div>
   </div>
   <div class="foot-note">© REDCLIP PTE. LTD. · 小红夹 · 10 Anson Road, #11-20/21 International Plaza, Singapore 079903 · ceo@redclip.ai</div>
 </section>`;
 track.innerHTML = html;
+panels = [...track.querySelectorAll('.panel')];
+}
 
 const PANEL_COUNT = SERVICES.length + 3; // 14: 11 services + partners + about + contact
 
 /* ================= UNIFIED JOURNEY DRIVE ================= */
 const jWrap   = document.getElementById('journey');
 const jSticky = document.getElementById('jSticky');
-const panels = [...track.querySelectorAll('.panel')];
+let panels = [];
+buildPanels();
 
 /* sequential chain — one video per service, no looping.
    Segment k scrubs VIDEOS[k]; its service pops on the end frame; the next
@@ -1694,50 +2061,64 @@ const navDrop = document.getElementById('navDrop');
 const svcBtn  = document.getElementById('svcBtn');
 const svcMenu = document.getElementById('svcMenu');
 
-const SVC_DESC = [
-  'Records, registers and structures.',
-  'Automated KYC and KYB reviews.',
-  'Deadlines, tracked automatically.',
-  'Onboarding to service delivery.',
-  'Generate corporate documents.',
-  'Portfolio-wide accounting visibility.',
-  'AI agents with human control.',
-  'Secure access for your clients.',
-  'Payments inside your workflows.',
-  'Digital and cross-border payments.',
-  'A global provider network.',
-];
-svcMenu.innerHTML = `
+function buildDrop(){
+  svcMenu.innerHTML = `
   <div class="drop-explore">
-    <div class="drop-eyebrow">Explore</div>
-    <p>One connected platform for entities, compliance, workflows and payments.</p>
-    <button class="drop-view" role="menuitem" data-goto="0">See the services →</button>
+    <div class="drop-eyebrow">${t('dropExplore')}</div>
+    <p>${t('dropBlurb')}</p>
+    <button class="drop-view" role="menuitem" data-goto="0">${t('dropSee')}</button>
   </div>
   <div class="drop-cats">
-    <div class="drop-eyebrow">Services</div>
+    <div class="drop-eyebrow">${t('dropServices')}</div>
     <div class="drop-grid">
       ${SERVICES.map((s,i)=>
-        `<button role="menuitem" data-goto="${panelOfService(i)}"><b>${s.name}</b><span>${SVC_DESC[i]}</span></button>`
+        `<button role="menuitem" data-goto="${panelOfService(i)}"><b>${L(s).name}</b><span>${t('svcDesc')[i]}</span></button>`
       ).join('')}
-      <button class="full" role="menuitem" data-goto="${CONTACT_PANEL}"><b>Contact</b><span>Book a free consultation.</span></button>
+      <button class="full" role="menuitem" data-goto="${CONTACT_PANEL}"><b>${t('navContact')}</b><span>${t('dropContactDesc')}</span></button>
     </div>
   </div>`;
+}
+buildDrop();
 
 /* feature strip: one button per PAGE (services, breathers, contact) in
    panel order, separated by dots — index in this list = panel index */
-const STRIP = [
-  ...SERVICES.slice(0,6).map((s,i)=>({label:s.name, goto:i})),
-  {label:'Partners', goto:6},
-  {label:'About',    goto:7},
-  ...SERVICES.slice(6).map((s,i)=>({label:s.name, goto:i+8})),
-  {label:'Contact',  goto:CONTACT_PANEL}
-];
 const featStrip = document.getElementById('featStrip');
-featStrip.innerHTML = STRIP
-  .map(o=>`<button data-goto="${o.goto}">${o.label}</button>`)
-  .join('<span class="fdot"></span>');
-const featBtns = [...featStrip.querySelectorAll('button')];
+let featBtns = [];
 let stripIdx = -1;
+function buildStrip(){
+  const STRIP = [
+    ...SERVICES.slice(0,6).map((s,i)=>({label:L(s).name, goto:i})),
+    {label:t('partnersLabel'), goto:6},
+    {label:t('aboutLabel'),    goto:7},
+    ...SERVICES.slice(6).map((s,i)=>({label:L(s).name, goto:i+8})),
+    {label:t('contactLabel'),  goto:CONTACT_PANEL}
+  ];
+  featStrip.innerHTML = STRIP
+    .map(o=>`<button data-goto="${o.goto}">${o.label}</button>`)
+    .join('<span class="fdot"></span>');
+  featBtns = [...featStrip.querySelectorAll('button')];
+  stripIdx = -1;                        // force the highlight to reapply
+}
+buildStrip();
+
+/* ================= LANGUAGE SWITCH ================= */
+const langBtn = document.getElementById('langBtn');
+function applyLang(){
+  document.documentElement.lang = LANG === 'zh' ? 'zh-Hans' : 'en';
+  document.getElementById('langLabel').textContent = LANG === 'zh' ? 'EN' : '中文';
+  document.getElementById('svcBtnLabel').textContent = t('navServices');
+  document.getElementById('navContact').textContent  = t('navContact');
+  document.getElementById('navLogin').textContent    = t('navLogin');
+  document.getElementById('navLogin').title = LANG === 'zh' ? '登录：客户或代理' : 'Log in: client or agent';
+  document.body.classList.toggle('lang-zh', LANG === 'zh');
+  buildDrop(); buildStrip(); buildEntryWords(); buildPanels();
+}
+langBtn.addEventListener('click', ()=>{
+  LANG = LANG === 'zh' ? 'en' : 'zh';
+  try { localStorage.setItem('redclip-lang', LANG); } catch(e){}
+  closeDrop();
+  applyLang();
+});
 
 function openDrop(){ navDrop.classList.add('open'); svcBtn.setAttribute('aria-expanded','true'); }
 function closeDrop(){ navDrop.classList.remove('open'); svcBtn.setAttribute('aria-expanded','false'); }
@@ -1757,12 +2138,19 @@ const midEyebrow = midWords.querySelector('.mid-eyebrow');
 const sideRed = document.getElementById('sideRed');
 const midBrand = midWords.querySelector('.mid-brand');
 const pageVeil = document.querySelector('.page-veil');
-const noteWords = [];
-midWords.querySelectorAll('[data-words]').forEach(el=>{
-  el.innerHTML = el.textContent.trim().split(/\s+/)
-    .map(w=>`<span class="w">${w}</span>`).join(' ');
-  noteWords.push(...el.querySelectorAll('.w'));
-});
+let noteWords = [];
+const midLine = midWords.querySelector('[data-words]');
+function buildEntryWords(){
+  midEyebrow.textContent = t('entryEyebrow');
+  const line = t('entryLine');
+  /* Chinese has no spaces, so reveal it character by character instead */
+  const parts = LANG === 'zh' ? [...line] : line.trim().split(/\s+/);
+  midLine.innerHTML = parts.map(w=>`<span class="w">${w}</span>`)
+    .join(LANG === 'zh' ? '' : ' ');
+  noteWords = [...midLine.querySelectorAll('.w')];
+}
+buildEntryWords();
+applyLang();          // safe now that every build function's deps exist
 
 /* the opening video plays by itself on arrival; once it ends (or the visitor
    flicks away) it parks on its final frame and the scroll engine owns it */
@@ -1878,7 +2266,9 @@ window.addEventListener('resize', ()=>{
 });
 
 /* ================= LEAD FORM (mailto) ================= */
-document.getElementById('leadForm').addEventListener('submit', e=>{
+/* delegated so it survives the panels being rebuilt on a language switch */
+document.addEventListener('submit', e=>{
+  if (e.target.id !== 'leadForm') return;
   e.preventDefault();
   const f = new FormData(e.target);
   const subject = encodeURIComponent("Enquiry: " + (f.get('company') || f.get('name') || "REDclip Platform"));
