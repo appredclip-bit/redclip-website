@@ -914,6 +914,20 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
 .lead-form textarea{resize:vertical;min-height:84px;}
 .lead-form button{grid-column:1/-1;justify-content:center;}
 .form-fine{font-size:11px !important;line-height:1.5;color:rgba(17,17,20,.45) !important;margin-top:-2px;}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;}  /* spam trap */
+.form-status{
+  font-size:12.5px !important;line-height:1.5;margin:0 !important;
+  color:var(--grey) !important;
+}
+.form-status:empty{display:none;}
+.form-status.ok{
+  color:#15803d !important;font-weight:600;
+  background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:10px 12px;
+}
+.form-status.bad{
+  color:var(--red-dark) !important;font-weight:600;
+  background:#fff1f2;border:1px solid #fecdd3;border-radius:9px;padding:10px 12px;
+}
 
 
 /* footer strip inside last panel */
@@ -1551,6 +1565,9 @@ const UI = {
     hChallenges:"Tell us about any operational, compliance or technology challenges you would like to address.",
     selectPlaceholder:"Select…", moreThan:"More than 1,000",
     formBtn:"Find My Solution",
+    sending:"Sending…",
+    sent:"Thank you. Your enquiry has been sent to our team and we will be in touch shortly.",
+    failed:"We could not send that automatically. Opening your email app instead…",
     formFine:"By submitting this form, you agree that our team may contact you regarding your enquiry. Your information will be handled in accordance with our Privacy Policy.",
     countries:["Singapore","Malaysia","Hong Kong SAR","China","Indonesia","Vietnam","Thailand","Philippines","India","United Arab Emirates","United Kingdom","United States","Australia","Other"],
     svcDesc:["Records, registers and structures.","Automated KYC and KYB reviews.","Deadlines, tracked automatically.","Onboarding to service delivery.","Generate corporate documents.","Portfolio-wide accounting visibility.","AI agents with human control.","Secure access for your clients.","Payments inside your workflows.","Digital and cross-border payments.","A global provider network."]
@@ -1582,6 +1599,9 @@ const UI = {
     hChallenges:"请告诉我们您希望解决的运营、合规或技术方面的挑战。",
     selectPlaceholder:"请选择…", moreThan:"超过 1,000",
     formBtn:"获取解决方案",
+    sending:"发送中…",
+    sent:"感谢您的咨询，我们的团队已收到，并会尽快与您联系。",
+    failed:"自动发送未成功，正在为您打开邮件应用…",
     formFine:"提交本表格即表示您同意我们的团队就您的咨询与您联系。我们将依据隐私政策处理您的信息。",
     countries:["新加坡","马来西亚","中国香港","中国内地","印度尼西亚","越南","泰国","菲律宾","印度","阿联酋","英国","美国","澳大利亚","其他"],
     svcDesc:["记录、登记册与架构。","自动化 KYC 与 KYB 审核。","自动追踪各项到期日。","从开户到服务交付。","生成企业文件。","全组合账务透明度。","AI 助理，人工掌控。","为客户提供安全访问。","流程内嵌支付。","数字与跨境支付。","全球服务机构网络。"]
@@ -1805,7 +1825,8 @@ html += `
     <div class="lead-card">
       <h3>${t('formTitle')}</h3>
       <p>${t('formDesc')}</p>
-      <form class="lead-form" id="leadForm">
+      <form class="lead-form" id="leadForm" action="https://formsubmit.co/ceo@redclip.ai" method="POST">
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
         <label>${t('fName')}<input type="text" name="name" required><i>${t('hName')}</i></label>
         <label>${t('fEmail')}<input type="email" name="email" required><i>${t('hEmail')}</i></label>
         <label>${t('fPhone')}<input type="tel" name="phone"><i>${t('hPhone')}</i></label>
@@ -1831,6 +1852,7 @@ html += `
           <i>${t('hChallenges')}</i>
         </label>
         <button type="submit" class="btn btn-red">${t('formBtn')}</button>
+        <p class="form-status full" role="status" aria-live="polite"></p>
         <p class="form-fine full">${t('formFine')}</p>
       </form>
     </div>
@@ -2264,17 +2286,71 @@ window.addEventListener('resize', ()=>{
   window.scrollTo({top: jWrap.offsetTop + u * lastVH, behavior:'auto'});
 });
 
-/* ================= LEAD FORM (mailto) ================= */
-/* delegated so it survives the panels being rebuilt on a language switch */
-document.addEventListener('submit', e=>{
-  if (e.target.id !== 'leadForm') return;
-  e.preventDefault();
-  const f = new FormData(e.target);
+/* ================= LEAD FORM =================
+   Posts straight to ceo@redclip.ai through FormSubmit, so the enquiry is
+   delivered even when the visitor has no mail app set up. If that request
+   fails for any reason we fall back to opening their mail client. */
+const FORM_ENDPOINT = 'https://formsubmit.co/ajax/ceo@redclip.ai';
+
+function mailtoFallback(f){
   const subject = encodeURIComponent("Enquiry: " + (f.get('company') || f.get('name') || "REDclip Platform"));
   const body = encodeURIComponent(
     `Name: ${f.get('name')}\nBusiness Email: ${f.get('email')}\nBusiness Telephone: ${f.get('phone')||"-"}\nCompany Name: ${f.get('company')||"-"}\nCountry or Region: ${f.get('country')||"-"}\nNumber of Entities Managed: ${f.get('entities')||"-"}\n\nCurrent Challenges:\n${f.get('message')||"-"}`
   );
   window.location.href = `mailto:ceo@redclip.ai?subject=${subject}&body=${body}`;
+}
+
+/* delegated so it survives the panels being rebuilt on a language switch */
+document.addEventListener('submit', async e=>{
+  if (e.target.id !== 'leadForm') return;
+  e.preventDefault();
+  const form = e.target;
+  const btn  = form.querySelector('button[type="submit"]');
+  const note = form.querySelector('.form-status');
+  const f = new FormData(form);
+  if (f.get('_honey')) return;                 // bot filled the hidden field
+
+  btn.disabled = true;
+  const label = btn.textContent;
+  btn.textContent = t('sending');
+  note.className = 'form-status full';
+  note.textContent = '';
+
+  try{
+    const res = await fetch(FORM_ENDPOINT, {
+      method:'POST',
+      headers:{'Content-Type':'application/json', 'Accept':'application/json'},
+      body: JSON.stringify({
+        _subject: "REDclip enquiry: " + (f.get('company') || f.get('name') || 'website'),
+        _template: 'table',
+        _captcha: 'false',
+        "Name": f.get('name'),
+        "Business Email": f.get('email'),
+        "Business Telephone": f.get('phone') || '-',
+        "Company Name": f.get('company') || '-',
+        "Country or Region": f.get('country') || '-',
+        "Entities Managed": f.get('entities') || '-',
+        "Current Challenges": f.get('message') || '-'
+      })
+    });
+    /* the endpoint answers 200 even when it refuses to deliver (e.g. the
+       address has not been activated yet), so trust the body, not the status */
+    let data = {};
+    try { data = await res.json(); } catch(e){}
+    const delivered = res.ok && String(data.success) === 'true';
+    if (!delivered) throw new Error(data.message || ('bad status ' + res.status));
+    form.reset();
+    note.className = 'form-status full ok';
+    note.textContent = t('sent');
+    btn.textContent = label;
+    btn.disabled = false;
+  }catch(err){
+    note.className = 'form-status full bad';
+    note.textContent = t('failed');
+    btn.textContent = label;
+    btn.disabled = false;
+    setTimeout(()=>mailtoFallback(f), 900);
+  }
 });
 </script>
 </body>
