@@ -2029,7 +2029,7 @@ function goToStop(i){
      give the dive video time to breathe so it reads as a scene, not a skip */
   if ((i === 1 && units() < 0.5) || (i === 0 && units() > 2.5)) ms = 2600;
   flyTo(dest, ms);
-  setTimeout(()=>{ pageLock = false; snapping = false; }, ms + 140);
+  setTimeout(()=>{ pageLock = false; snapping = false; syncAddress(); }, ms + 140);
 }
 function turnPage(dir){
   if (pageLock) return;
@@ -2204,6 +2204,54 @@ let v0auto = true;
   else v0.addEventListener('canplay', tryPlay, {once:true});
   v0.addEventListener('ended', ()=>{ v0auto = false; });
 }
+
+/* ================= PAGE ADDRESSES =================
+   Every stop has its own link (redclip.com/contact, /pay, …) so a page can
+   be shared directly. vercel.json rewrites these paths to this file; here we
+   land on the matching stop, and keep the address bar in step as the visitor
+   flicks through. Index in this list = stop index (0 = the entry screen). */
+const SLUGS = ['', 'entities','verify','comply','flow','documents','accounts',
+               'partners','about','intelligence','portal','finance','pay',
+               'marketplace','contact'];
+const BASE_TITLE = document.title;
+history.scrollRestoration = 'manual';
+
+const pathSlug = location.pathname.replace(/^\/+|\/+$/g, '').replace(/\.html$/, '').toLowerCase();
+const deepIdx  = SLUGS.indexOf(pathSlug);          // -1 for index.html or unknown paths
+function landOn(i){
+  window.scrollTo(0, jWrap.offsetTop + stopU(i) * window.innerHeight);
+  pageIdx = i;
+}
+let userMoved = false;
+['wheel','touchstart','keydown'].forEach(ev=>addEventListener(ev, ()=>{ userMoved = true; }, {passive:true, once:true}));
+if (deepIdx > 0){
+  landOn(deepIdx);
+  /* some mobile browsers reset the scroll once the page finishes loading */
+  addEventListener('load', ()=>{ if (!userMoved && nearestStop() !== deepIdx) landOn(deepIdx); });
+}
+
+let shownSlug = null;
+function syncAddress(force){
+  if (pageLock && !force) return;
+  const i = nearestStop();
+  if (Math.abs(units() - stopU(i)) > 0.2) return;        // between pages, leave it
+  const slug = SLUGS[i];
+  if (slug === shownSlug && !force) return;
+  shownSlug = slug;
+  const want = '/' + slug;
+  if (location.pathname !== want){
+    history.replaceState(null, '', want + location.search + location.hash);
+  }
+  document.title = i === 0 ? BASE_TITLE
+    : `${featBtns[i - 1] ? featBtns[i - 1].textContent : slug} | REDclip 小红夹`;
+}
+let addrTimer = null;
+addEventListener('scroll', ()=>{
+  clearTimeout(addrTimer);
+  addrTimer = setTimeout(syncAddress, 180);
+}, {passive:true});
+langBtn.addEventListener('click', ()=>syncAddress(true));
+setTimeout(()=>syncAddress(true), 0);
 
 /* ================= MAIN LOOP ================= */
 function loop(){

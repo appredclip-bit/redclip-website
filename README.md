@@ -10,6 +10,31 @@ plain HTML/CSS/JS that any static host can serve.
 | `index.html` | The one-pager: DNA entry → scroll-scrubbed journey → 11 services + Partners/About breathers → contact |
 | `login.html` | Portal chooser — Client / Agent login buttons linking to the apps |
 
+Every page of the one-pager has its own address (rewritten to `index.html` by
+`vercel.json`, and kept in step with the address bar as visitors flick through):
+
+| Page | Link |
+| --- | --- |
+| Home | `/` |
+| Entities | `/entities` |
+| Verify | `/verify` |
+| Comply | `/comply` |
+| Flow | `/flow` |
+| Documents | `/documents` |
+| Accounts | `/accounts` |
+| Partners | `/partners` |
+| About | `/about` |
+| Intelligence | `/intelligence` |
+| Portal | `/portal` |
+| Finance | `/finance` |
+| Redclip Pay | `/pay` |
+| Marketplace | `/marketplace` |
+| Contact | `/contact` |
+| Login | `/login` |
+
+Adding a page means adding its slug to both `SLUGS` in `index.html` and the
+rewrite list in `vercel.json`.
+
 Portals the login page hands off to:
 - Client → `https://app.redclip.com`
 - Agent → `https://go.redclip.com`

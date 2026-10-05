@@ -1,0 +1,10 @@
+{
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/:page(entities|verify|comply|flow|documents|accounts|partners|about|intelligence|portal|finance|pay|marketplace|contact)",
+      "destination": "/index.html"
+    },
+    { "source": "/login", "destination": "/login.html" }
+  ]
+}
