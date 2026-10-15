@@ -935,6 +935,8 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
 .lead-form textarea{resize:vertical;min-height:84px;}
 .lead-form button{grid-column:1/-1;justify-content:center;}
 .form-fine{font-size:11px !important;line-height:1.5;color:rgba(17,17,20,.45) !important;margin-top:-2px;}
+.form-fine a,.foot-note a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+.foot-note a{pointer-events:auto;}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;}  /* spam trap */
 .form-status{
   font-size:12.5px !important;line-height:1.5;margin:0 !important;
@@ -1874,11 +1876,11 @@ html += `
         </label>
         <button type="submit" class="btn btn-red">${t('formBtn')}</button>
         <p class="form-status full" role="status" aria-live="polite"></p>
-        <p class="form-fine full">${t('formFine')}</p>
+        <p class="form-fine full">${t('formFine').replace(/Privacy Policy|隐私政策/, m=>`<a href="/privacy-policy" target="_blank" rel="noopener">${m}</a>`)}</p>
       </form>
     </div>
   </div>
-  <div class="foot-note">© REDCLIP PTE. LTD. · 小红夹 · 10 Anson Road, #11-20/21 International Plaza, Singapore 079903 · ceo@redclip.ai</div>
+  <div class="foot-note">© REDCLIP PTE. LTD. · 小红夹 · 10 Anson Road, #11-20/21 International Plaza, Singapore 079903 · ceo@redclip.ai · <a href="/privacy-policy">Privacy</a></div>
 </section>`;
 track.innerHTML = html;
 panels = [...track.querySelectorAll('.panel')];
