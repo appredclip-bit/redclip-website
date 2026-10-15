@@ -448,6 +448,14 @@ body.brand-center nav .logo{opacity:0;pointer-events:none;}
   overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
 }
 .feat-strip::-webkit-scrollbar{display:none;}
+.corner-privacy{
+  position:fixed;right:clamp(12px,1.6vw,22px);bottom:10px;z-index:95;
+  font-size:11px;font-weight:500;letter-spacing:.01em;
+  color:rgba(17,17,20,.45);text-decoration:none;
+  padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.55);
+  backdrop-filter:blur(4px);transition:color .2s;
+}
+.corner-privacy:hover{color:var(--red);}
 /* auto margins centre the row when it fits, and let it scroll when it doesn't */
 .feat-strip > :first-child{margin-left:auto;}
 .feat-strip > :last-child{margin-right:auto;}
@@ -1089,6 +1097,9 @@ body.strip-on .feat-strip{opacity:1;pointer-events:auto;transform:none;}
 
 <!-- feature strip: which page you're on, click to skip there (built from SERVICES) -->
 <div class="feat-strip" id="featStrip" aria-label="Platform features"></div>
+
+<!-- small, always-there privacy link, bottom right -->
+<a class="corner-privacy" id="cornerPrivacy" href="/privacy-policy">Privacy Policy</a>
 
 <!-- ============ JOURNEY : video scrub, then panels slide in from the right ============ -->
 <div id="journey">
@@ -2153,6 +2164,7 @@ function applyLang(){
   document.getElementById('svcBtnLabel').textContent = t('navServices');
   document.getElementById('navContact').textContent  = t('navContact');
   document.getElementById('navLogin').textContent    = t('navLogin');
+  document.getElementById('cornerPrivacy').textContent = LANG === 'zh' ? '隐私政策' : 'Privacy Policy';
   document.getElementById('navLogin').title = LANG === 'zh' ? '登录：客户或代理' : 'Log in: client or agent';
   document.body.classList.toggle('lang-zh', LANG === 'zh');
   buildDrop(); buildStrip(); buildEntryWords(); buildPanels();
